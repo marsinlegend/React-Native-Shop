@@ -3,7 +3,7 @@ import { Text, View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import ProductItem from '../../components/ProductItem/ProductItem';
 
-const ProductsOverview = (props) => {
+const ProductsOverviewScreen = ({ navigation }) => {
   const products = useSelector(
     (state) => state.products.availableProducts,
   );
@@ -17,7 +17,12 @@ const ProductsOverview = (props) => {
           image={item.imageUrl}
           title={item.title}
           price={item.price}
-          onViewDetails={() => {}}
+          onViewDetails={() => {
+            navigation.navigate('ProductDetails', {
+              productId: item.id,
+              productTitle: item.title
+            })
+          }}
           onAddToCard={() => {}}
         />
       )}
@@ -25,4 +30,4 @@ const ProductsOverview = (props) => {
   );
 };
 
-export default ProductsOverview;
+export default ProductsOverviewScreen;

@@ -44,6 +44,10 @@ const styles = StyleSheet.create({
     height: '25%',
     paddingHorizontal: 20,
   },
+  touchable: {
+    overflow: 'hidden',
+    borderRadius: 10,
+  },
 });
 
 export default styles;

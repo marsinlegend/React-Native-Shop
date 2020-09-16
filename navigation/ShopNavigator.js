@@ -1,5 +1,6 @@
 import React from 'react';
-import ProductsOverview from '../screens/shop/ProductsOverviewScreen';
+import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
+import ProductDetailsScreen from '../screens/shop/ProductDetailsScreen/ProductDetailsScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import Colors from '../constants/Colors';
 import { Platform } from 'react-native';
@@ -10,12 +11,13 @@ const ProductsNavigator = (props) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Products Overview"
-        component={ProductsOverview}
+        name="ProductsOverview"
+        component={ProductsOverviewScreen}
         options={{
+          title: 'Products Overview',
           headerStyle: {
             backgroundColor:
-              Platform.OS === 'android' ? Colors.darkPrimary : '',
+              Platform.OS === 'android' ? Colors.defaultPrimary : '',
           },
           headerTintColor:
             Platform.OS === 'android'
@@ -24,6 +26,29 @@ const ProductsNavigator = (props) => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+        }}
+      />
+
+      <Stack.Screen
+        name="ProductDetails"
+        component={ProductDetailsScreen}
+        options={({ navigation, route }) => {
+          return {
+            title: route.params.productTitle,
+            headerStyle: {
+              backgroundColor:
+                Platform.OS === 'android'
+                  ? Colors.defaultPrimary
+                  : '',
+            },
+            headerTintColor:
+              Platform.OS === 'android'
+                ? Colors.textPrimary
+                : Colors.darkPrimary,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          };
         }}
       />
     </Stack.Navigator>
