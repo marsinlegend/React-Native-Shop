@@ -25,6 +25,7 @@ const ProductsNavigator = (props) => {
               : Colors.darkPrimary,
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontFamily: 'lato-bold',
           },
         }}
       />
@@ -47,6 +48,7 @@ const ProductsNavigator = (props) => {
                 : Colors.darkPrimary,
             headerTitleStyle: {
               fontWeight: 'bold',
+              fontFamily: 'lato-bold',
             },
           };
         }}

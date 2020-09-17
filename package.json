@@ -13,6 +13,7 @@
     "@react-navigation/stack": "^5.9.0",
     "@types/react-native": "^0.63.13",
     "expo": "~38.0.8",
+    "expo-font": "^8.2.2",
     "expo-status-bar": "^1.0.2",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",

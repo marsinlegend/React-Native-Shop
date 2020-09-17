@@ -32,10 +32,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginVertical: 4,
+    fontFamily: 'lato-bold',
   },
   price: {
     fontSize: 14,
     color: Colors.secondaryText,
+    fontFamily: 'lato',
   },
   actions: {
     flexDirection: 'row',
