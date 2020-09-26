@@ -2,14 +2,14 @@ import React from 'react';
 import {
   Button,
   Image,
-  Text,
-  View,
-  TouchableOpacity,
-  TouchableNativeFeedback,
   Platform,
+  Text,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import s from './styles';
-import Colors from '../../constants/Colors';
+import Colors from '../../../constants/Colors';
 
 const ProductItem = ({
   title,

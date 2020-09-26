@@ -8,13 +8,15 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/balsamiq-sans": "^0.1.0",
+    "@expo/vector-icons": "^10.0.0",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-navigation/native": "^5.7.3",
-    "@react-navigation/stack": "^5.9.0",
-    "@types/react-native": "^0.63.13",
+    "@react-navigation/native": "^5.7.4",
+    "@react-navigation/stack": "^5.9.1",
+    "@types/react-native": "^0.63.20",
     "expo": "~38.0.8",
-    "expo-font": "^8.2.2",
-    "expo-status-bar": "^1.0.2",
+    "expo-font": "~8.2.1",
+    "expo-status-bar": "^1.0.0",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
@@ -22,13 +24,15 @@
     "react-native-reanimated": "~1.9.0",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
+    "react-native-web": "^0.13.13",
     "react-navigation-header-buttons": "^5.0.2",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.6",
-    "babel-preset-expo": "~8.1.0"
+    "@babel/core": "^7.11.6",
+    "babel-preset-expo": "^8.3.0",
+    "redux-devtools-extension": "^2.13.8"
   },
   "private": true
 }

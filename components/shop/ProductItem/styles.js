@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import Colors from '../../constants/Colors';
+import Colors from '../../../constants/Colors';
 
 const styles = StyleSheet.create({
   product: {
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
     backgroundColor: 'white',
-    height: 300,
+    height: 350,
     margin: 20,
   },
   imgContainer: {
@@ -31,13 +31,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    color: Colors.primaryText,
     marginVertical: 4,
-    fontFamily: 'lato-bold',
+    fontFamily: 'BalsamiqSans_700Bold',
   },
   price: {
     fontSize: 14,
     color: Colors.secondaryText,
-    fontFamily: 'lato',
+    fontFamily: 'BalsamiqSans_400Regular',
   },
   actions: {
     flexDirection: 'row',

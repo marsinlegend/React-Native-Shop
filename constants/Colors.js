@@ -4,7 +4,7 @@ export default {
   lightPrimary: '#FFCCBC',
   textPrimary: '#FFFFFF',
   accent: '#FFC107',
-  primaryText: '#212121',
+  primaryText: '#393b39',
   secondaryText: '#757575',
   divider: '#BDBDBD',
 };
