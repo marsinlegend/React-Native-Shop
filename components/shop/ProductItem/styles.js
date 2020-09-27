@@ -33,12 +33,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.primaryText,
     marginVertical: 4,
-    fontFamily: 'BalsamiqSans_700Bold',
+    fontFamily: 'Fonts_700',
   },
   price: {
     fontSize: 14,
     color: Colors.secondaryText,
-    fontFamily: 'BalsamiqSans_400Regular',
+    fontFamily: 'Fonts_400',
   },
   actions: {
     flexDirection: 'row',

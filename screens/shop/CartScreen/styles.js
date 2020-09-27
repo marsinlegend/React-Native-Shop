@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   summaryText: {
-    fontFamily: 'BalsamiqSans_700Bold',
+    fontFamily: 'Fonts_700',
     fontSize: 18,
     color: Colors.primaryText,
   },

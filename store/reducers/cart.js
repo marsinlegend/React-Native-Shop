@@ -1,4 +1,4 @@
-import { ADD_TO_CART } from '../actions/cart';
+import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/cart';
 import CartItem from '../../models/CartItem';
 
 const INITIAL_STATE = {
@@ -12,6 +12,7 @@ export default (state = INITIAL_STATE, action) => {
       const addedProducts = action.product;
       const prodPrice = addedProducts.price;
       const prodTitle = addedProducts.title;
+      const totalAmount = state.totalAmount + prodPrice;
 
       if (state.items[addedProducts.id]) {
         const updatedCartItem = new CartItem(
@@ -27,7 +28,7 @@ export default (state = INITIAL_STATE, action) => {
             ...state.items,
             [addedProducts.id]: updatedCartItem,
           },
-          totalAmount: state.totalAmount + prodPrice,
+          totalAmount: totalAmount,
         };
       } else {
         const newCartItem = new CartItem(
@@ -36,18 +37,50 @@ export default (state = INITIAL_STATE, action) => {
           prodTitle,
           prodPrice,
         );
-
+        console.log(state);
         return {
           ...state,
           items: {
             ...state.items,
             [addedProducts.id]: newCartItem,
           },
-          totalAmount: state.totalAmount + prodPrice,
+          totalAmount: totalAmount,
+        };
+      }
+    }
+
+    case REMOVE_FROM_CART: {
+      const selectedProduct = state.items[action.pid];
+      const currentQty = state.items[action.pid].quantity;
+      const totalAmount =
+        state.totalAmount - selectedProduct.productPrice;
+
+      if (currentQty > 1) {
+        return {
+          ...state,
+          items: {
+            ...state.items,
+            [action.pid]: new CartItem(
+              selectedProduct.quantity - 1,
+              selectedProduct.productPrice,
+              selectedProduct.productTitle,
+              selectedProduct.sum - selectedProduct.productPrice,
+            ),
+          },
+          totalAmount: totalAmount,
+        };
+      } else {
+        return {
+          ...state,
+          items: () => {
+            const updatedItems = { ...state.items };
+            delete updatedItems[action.pid];
+            return updatedItems;
+          },
+          totalAmount: totalAmount,
         };
       }
     }
   }
-
   return state;
 };

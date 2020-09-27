@@ -43,7 +43,7 @@ const ProductsNavigator = (props) => {
                 ? Colors.textPrimary
                 : Colors.darkPrimary,
             headerTitleStyle: {
-              fontFamily: 'BalsamiqSans_700Bold',
+              fontFamily: 'Fonts_700',
             },
           };
         }}
@@ -66,7 +66,7 @@ const ProductsNavigator = (props) => {
                 ? Colors.textPrimary
                 : Colors.darkPrimary,
             headerTitleStyle: {
-              fontFamily: 'BalsamiqSans_700Bold',
+              fontFamily: 'Fonts_700',
             },
           };
         }}
@@ -88,7 +88,7 @@ const ProductsNavigator = (props) => {
                 ? Colors.textPrimary
                 : Colors.darkPrimary,
             headerTitleStyle: {
-              fontFamily: 'BalsamiqSans_700Bold',
+              fontFamily: 'Fonts_700',
             },
           };
         }}
