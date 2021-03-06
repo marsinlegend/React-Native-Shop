@@ -3,22 +3,39 @@ import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailsScreen from '../screens/shop/ProductDetailsScreen/ProductDetailsScreen';
 import CartScreen from '../screens/shop/CartScreen/CartScreen';
 import { createStackNavigator } from '@react-navigation/stack';
-import Colors from '../constants/Colors';
 import { Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/UI/HeaderButton/HeaderButton';
+import { DrawerActions } from '@react-navigation/native';
+import NavOpt from './NavOptions';
 
-const ProductsNavigator = (props) => {
+const ProductsStackNavigator = (props) => {
   const Stack = createStackNavigator();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="Products"
+      screenOptions={NavOpt.default}
+    >
       <Stack.Screen
         name="ProductsOverview"
         component={ProductsOverviewScreen}
         options={({ navigation, route }) => {
           return {
-            title: 'Products Overview',
+            title: 'All Products',
+            headerLeft: () => (
+              <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item
+                  title="Menu"
+                  iconName={
+                    Platform.OS === 'android' ? 'md-menu' : 'ios-menu'
+                  }
+                  onPress={() => {
+                    navigation.dispatch(DrawerActions.toggleDrawer());
+                  }}
+                />
+              </HeaderButtons>
+            ),
             headerRight: () => (
               <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
@@ -32,19 +49,6 @@ const ProductsNavigator = (props) => {
                 />
               </HeaderButtons>
             ),
-            headerStyle: {
-              backgroundColor:
-                Platform.OS === 'android'
-                  ? Colors.defaultPrimary
-                  : '',
-            },
-            headerTintColor:
-              Platform.OS === 'android'
-                ? Colors.textPrimary
-                : Colors.darkPrimary,
-            headerTitleStyle: {
-              fontFamily: 'Fonts_700',
-            },
           };
         }}
       />
@@ -55,41 +59,30 @@ const ProductsNavigator = (props) => {
         options={({ navigation, route }) => {
           return {
             title: route.params.productTitle,
-            headerStyle: {
-              backgroundColor:
-                Platform.OS === 'android'
-                  ? Colors.defaultPrimary
-                  : '',
-            },
-            headerTintColor:
-              Platform.OS === 'android'
-                ? Colors.textPrimary
-                : Colors.darkPrimary,
-            headerTitleStyle: {
-              fontFamily: 'Fonts_700',
-            },
           };
         }}
       />
 
+      <Stack.Screen name="Cart" component={CartScreen} />
+
       <Stack.Screen
-        name="Cart"
+        name="Orders"
         component={CartScreen}
         options={({ navigation, route }) => {
           return {
-            headerStyle: {
-              backgroundColor:
-                Platform.OS === 'android'
-                  ? Colors.defaultPrimary
-                  : '',
-            },
-            headerTintColor:
-              Platform.OS === 'android'
-                ? Colors.textPrimary
-                : Colors.darkPrimary,
-            headerTitleStyle: {
-              fontFamily: 'Fonts_700',
-            },
+            headerLeft: () => (
+              <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item
+                  title="Menu"
+                  iconName={
+                    Platform.OS === 'android' ? 'md-menu' : 'ios-menu'
+                  }
+                  onPress={() => {
+                    navigation.openDrawer();
+                  }}
+                />
+              </HeaderButtons>
+            ),
           };
         }}
       />
@@ -97,4 +90,4 @@ const ProductsNavigator = (props) => {
   );
 };
 
-export default ProductsNavigator;
+export default ProductsStackNavigator;

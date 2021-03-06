@@ -10,14 +10,9 @@ import {
 } from 'react-native';
 import s from './styles';
 import Colors from '../../../constants/Colors';
+import Card from '../../UI/Card/Card';
 
-const ProductItem = ({
-  title,
-  price,
-  image,
-  onViewDetails,
-  onAddToCard,
-}) => {
+const ProductItem = ({ title, price, image, onSelect, children }) => {
   let TouchableCmp = TouchableOpacity;
 
   if (Platform.OS === 'android' && Platform.Version >= 21) {
@@ -25,9 +20,9 @@ const ProductItem = ({
   }
 
   return (
-    <View style={s.product}>
+    <Card style={s.product}>
       <View>
-        <TouchableCmp onPress={onViewDetails} useForeground>
+        <TouchableCmp onPress={onSelect} useForeground>
           <View style={s.touchable}>
             <View style={s.imgContainer}>
               <Image style={s.img} source={{ uri: image }} />
@@ -38,22 +33,11 @@ const ProductItem = ({
               <Text style={s.price}>${price.toFixed(2)}</Text>
             </View>
 
-            <View style={s.actions}>
-              <Button
-                color={Colors.defaultPrimary}
-                title="View Details"
-                onPress={onViewDetails}
-              />
-              <Button
-                color={Colors.defaultPrimary}
-                title="To Card"
-                onPress={onAddToCard}
-              />
-            </View>
+            <View style={s.actions}>{children}</View>
           </View>
         </TouchableCmp>
       </View>
-    </View>
+    </Card>
   );
 };
 

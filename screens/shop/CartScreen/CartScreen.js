@@ -1,10 +1,12 @@
 import React from 'react';
 import { Button, FlatList, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import s from './styles';
+import Card from '../../../components/UI/Card/Card';
 import Colors from '../../../constants/Colors';
 import CartItem from '../../../components/shop/CartItem/CartItem';
+import * as ordersActions from '../../../store/actions/orders';
 import * as cartActions from '../../../store/actions/cart';
+import s from './styles';
 
 const CartScreen = () => {
   const cartTotalAmount = useSelector(
@@ -32,17 +34,24 @@ const CartScreen = () => {
 
   return (
     <View style={s.screen}>
-      <View style={s.summary}>
+      <Card style={s.summary}>
         <Text style={s.summaryText}>
-          Total: <Text style={s.amount}>{cartTotalAmount}</Text>
+          Total:{' '}
+          <Text style={s.amount}>
+            {Math.round((cartTotalAmount.toFixed(2) * 100) / 100)}
+          </Text>
         </Text>
         <Button
           title="Order Now"
           color={Colors.defaultPrimary}
-          onPress={() => {}}
           disabled={cartItems.length === 0}
+          onPress={() => {
+            dispatch(
+              ordersActions.addToCart(cartItems, cartTotalAmount),
+            );
+          }}
         />
-      </View>
+      </Card>
 
       <FlatList
         data={cartItems}
@@ -52,6 +61,7 @@ const CartScreen = () => {
             title={item.productTitle}
             quantity={item.quantity}
             amount={item.sum}
+            deletable
             onRemove={() => {
               dispatch(cartActions.removeFromCart(item.productId));
             }}

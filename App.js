@@ -2,14 +2,13 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { NavigationContainer } from '@react-navigation/native';
-import ProductsNavigator from './navigation/ShopNavigator';
 import {
   BalsamiqSans_400Regular as Fonts_400,
   BalsamiqSans_700Bold as Fonts_700,
   useFonts,
 } from '@expo-google-fonts/balsamiq-sans';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
+import ShopDrawerNavigator from './navigation/ShopDrawerNavigator';
 
 export default function App(props) {
   const [fontsLoaded] = useFonts({
@@ -23,9 +22,7 @@ export default function App(props) {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <ProductsNavigator />
-      </NavigationContainer>
+      <ShopDrawerNavigator />
     </Provider>
   );
 }
