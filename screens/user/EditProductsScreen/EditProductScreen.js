@@ -1,8 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  View,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as productsActions from '../../../store/actions/products';
+import {
+  VALIDATOR_MINLENGTH,
+  VALIDATOR_REQUIRE,
+} from '../../../util/validators';
 import s from './styles';
+import Input from '../../../components/UI/Input/Input';
+import { useForm } from '../../../hooks/formHook';
 
 const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
@@ -10,84 +21,143 @@ const EditProductsScreen = ({ route, navigation }) => {
   const editedProduct = useSelector((state) =>
     state.products.userProducts.find((prod) => prod.id === prodId),
   );
+  const initCreateProdInputs = {
+    title: {
+      value: '',
+      isValid: false,
+    },
 
-  const [title, setTitle] = useState(
-    editedProduct ? editedProduct.title : '',
-  );
-  const [imageUrl, setImageUrl] = useState(
-    editedProduct ? editedProduct.imageUrl : '',
-  );
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState(
-    editedProduct ? editedProduct.description : '',
+    imageUrl: {
+      value: '',
+      isValid: false,
+    },
+
+    price: {
+      value: '',
+      isValid: false,
+    },
+
+    description: {
+      value: null,
+      isValid: false,
+    },
+  };
+  const [formState, inputHandler] = useForm(
+    !editedProduct
+      ? initCreateProdInputs
+      : {
+          ...initCreateProdInputs,
+          price: undefined,
+        },
+    false,
   );
 
   const submitHandler = useCallback(() => {
+    if (!formState.isValid) {
+      Alert.alert(
+        'Wrong input!',
+        'Please check the errors in the form.',
+        [
+          {
+            text: 'Okay',
+          },
+        ],
+      );
+      return;
+    }
     if (editedProduct) {
       dispatch(
         productsActions.updateProduct(
           prodId,
-          title,
-          description,
-          imageUrl,
+          formState.inputs.title.value,
+          formState.inputs.description.value,
+          formState.inputs.imageUrl.value,
         ),
       );
     } else {
       dispatch(
         productsActions.createProduct(
-          title,
-          description,
-          imageUrl,
-          +price,
+          formState.inputs.title.value,
+          formState.inputs.description.value,
+          formState.inputs.imageUrl.value,
+          +formState.inputs.price.value,
         ),
       );
     }
     navigation.goBack();
-  }, [dispatch, prodId, title, description, imageUrl, price]);
+  }, [dispatch, prodId, formState]);
 
   useEffect(() => {
     navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
   return (
-    <ScrollView>
-      <View style={s.form}>
-        <View style={s.formControl}>
-          <Text style={s.label}>Title</Text>
-          <TextInput
-            style={s.input}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView>
+        <View style={s.form}>
+          <Input
+            id="title"
+            label="Title"
+            placeholder="Type here title"
+            errorText="Please enter a valid description (at least 5 characters)."
+            validators={[VALIDATOR_MINLENGTH(5)]}
+            onInput={inputHandler}
+            initValue={editedProduct ? editedProduct.title : ''}
+            initValid={!!editedProduct}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
           />
-        </View>
-        <View style={s.formControl}>
-          <Text style={s.label}>Image URL</Text>
-          <TextInput
-            style={s.input}
-            value={imageUrl}
-            onChangeText={(text) => setImageUrl(text)}
+          <Input
+            id="imageUrl"
+            label="Image URL"
+            placeholder="Type here image url"
+            errorText="Please enter a valid image url"
+            validators={[VALIDATOR_REQUIRE()]}
+            onInput={inputHandler}
+            initValue={editedProduct ? editedProduct.imageUrl : ''}
+            initValid={!!editedProduct}
+            returnKeyType="next"
+            keyboardType="default"
           />
-        </View>
-        {editedProduct ? null : (
-          <View style={s.formControl}>
-            <Text style={s.label}>Price</Text>
-            <TextInput
-              style={s.input}
-              value={price}
-              onChangeText={(text) => setPrice(text)}
+          {editedProduct ? null : (
+            <Input
+              id="price"
+              label="Price"
+              placeholder="Type here price"
+              errorText="Please enter a valid price"
+              validators={[VALIDATOR_REQUIRE()]}
+              onInput={inputHandler}
+              initValue={editedProduct ? editedProduct.price : ''}
+              initValid={!!editedProduct}
+              returnKeyType="next"
+              keyboardType="decimal-pad"
             />
-          </View>
-        )}
-        <View style={s.formControl}>
-          <Text style={s.label}>Description</Text>
-          <TextInput
-            style={s.input}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
+          )}
+          <Input
+            id="description"
+            label="Description"
+            placeholder="Type here description"
+            errorText="Please enter a valid description (at least 10 characters)."
+            validators={[VALIDATOR_MINLENGTH(10)]}
+            onInput={inputHandler}
+            initValue={editedProduct ? editedProduct.description : ''}
+            initValid={!!editedProduct}
+            autoCorrect
+            autoCapitalize="sentences"
+            keyboardType="default"
+            multiline
+            numberOfLines={3}
+            returnKeyType="done"
           />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
