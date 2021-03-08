@@ -3,7 +3,7 @@ import { Alert, Button, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
 import Colors from '../../../constants/Colors';
-import * as productsActions from '../../../store/actions/products';
+import * as productsOperations from '../../../store/operations/products';
 
 const UserProductsScreen = ({ navigation }) => {
   const userProducts = useSelector(
@@ -27,7 +27,7 @@ const UserProductsScreen = ({ navigation }) => {
           text: 'Yes',
           style: 'destructive',
           onPress: () => {
-            dispatch(productsActions.deleteProduct(id));
+            dispatch(productsOperations.deleteProduct(id));
           },
         },
       ],

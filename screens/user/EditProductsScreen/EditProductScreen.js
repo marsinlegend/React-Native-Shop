@@ -6,7 +6,6 @@ import {
   View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import * as productsActions from '../../../store/actions/products';
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
@@ -14,6 +13,7 @@ import {
 import s from './styles';
 import Input from '../../../components/UI/Input/Input';
 import { useForm } from '../../../hooks/formHook';
+import * as productsOperations from '../../../store/operations/products';
 
 const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
@@ -67,7 +67,7 @@ const EditProductsScreen = ({ route, navigation }) => {
     }
     if (editedProduct) {
       dispatch(
-        productsActions.updateProduct(
+        productsOperations.updateProduct(
           prodId,
           formState.inputs.title.value,
           formState.inputs.description.value,
@@ -76,7 +76,7 @@ const EditProductsScreen = ({ route, navigation }) => {
       );
     } else {
       dispatch(
-        productsActions.createProduct(
+        productsOperations.createProduct(
           formState.inputs.title.value,
           formState.inputs.description.value,
           formState.inputs.imageUrl.value,
