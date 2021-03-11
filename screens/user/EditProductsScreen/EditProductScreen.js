@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
+  Platform,
   ScrollView,
   View,
 } from 'react-native';
@@ -94,8 +95,8 @@ const EditProductsScreen = ({ route, navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={100}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView>
         <View style={s.form}>

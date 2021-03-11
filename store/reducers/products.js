@@ -1,8 +1,8 @@
 import PRODUCTS from '../../data/dummy-data';
-import uuid from 'uuid-random';
 import {
   CREATE_PRODUCT,
   DELETE_PRODUCT,
+  FETCH_PRODUCTS,
   UPDATE_PRODUCT,
 } from '../actions/products';
 import Product from '../../models/Product';
@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CREATE_PRODUCT: {
       const newProd = new Product(
-        uuid(),
+        action.productData.id,
         'u1',
         action.productData.title,
         action.productData.imageUrl,
@@ -66,6 +66,15 @@ export default (state = INITIAL_STATE, action) => {
         ),
         availableProducts: state.availableProducts.filter(
           (prod) => prod.id !== action.pid,
+        ),
+      };
+    }
+
+    case FETCH_PRODUCTS: {
+      return {
+        userProducts: action.products,
+        availableProducts: action.products.filter(
+          (prod) => prod.ownerId === 'u1',
         ),
       };
     }

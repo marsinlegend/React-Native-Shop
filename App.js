@@ -9,6 +9,9 @@ import {
 } from '@expo-google-fonts/balsamiq-sans';
 import AppLoading from 'expo-app-loading';
 import ShopDrawerNavigator from './navigation/ShopDrawerNavigator';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://192.168.0.106:5000';
 
 export default function App(props) {
   const [fontsLoaded] = useFonts({

@@ -1,8 +1,9 @@
-import React from 'react';
-import { Button, FlatList, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Button, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem/ProductItem';
-import * as cartActions from '../../store/actions/cart';
+import * as cartOperations from '../../store/operations/cart';
+import * as productsOperations from '../../store/operations/products';
 import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = ({ navigation }) => {
@@ -10,6 +11,10 @@ const ProductsOverviewScreen = ({ navigation }) => {
     (state) => state.products.availableProducts,
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(productsOperations.fetchProducts());
+  }, [dispatch]);
 
   const onSelectHandler = (id, title) => {
     navigation.navigate('ProductDetails', {
@@ -42,7 +47,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
             color={Colors.defaultPrimary}
             title="To Card"
             onPress={() => {
-              dispatch(cartActions.addToCart(item));
+              dispatch(cartOperations.addToCart(item));
             }}
           />
         </ProductItem>

@@ -1,9 +1,26 @@
 import {
   CREATE_PRODUCT,
   DELETE_PRODUCT,
+  FETCH_PRODUCTS,
   UPDATE_PRODUCT,
 } from '../actions/products';
 import { Api } from '../../api/Api';
+
+export const fetchProducts = () => {
+  return async (dispatch) => {
+    const res = await Api.fetchProducts();
+
+    console.log(res.data);
+
+    dispatch({
+      type: FETCH_PRODUCTS,
+      products: res.data.products.map((p) => ({
+        ...p,
+        ownerId: 'u1',
+      })),
+    });
+  };
+};
 
 export const createProduct = (
   title,
@@ -18,6 +35,8 @@ export const createProduct = (
       imageUrl,
       price,
     });
+
+    console.log(res);
 
     dispatch({
       type: CREATE_PRODUCT,

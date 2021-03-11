@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Card from '../../../components/UI/Card/Card';
 import Colors from '../../../constants/Colors';
 import CartItem from '../../../components/shop/CartItem/CartItem';
-import * as ordersActions from '../../../store/actions/orders';
-import * as cartActions from '../../../store/actions/cart';
+import * as ordersOperations from '../../../store/operations/orders';
+import * as cartOperations from '../../../store/operations/cart';
 import s from './styles';
 
 const CartScreen = () => {
@@ -47,7 +47,7 @@ const CartScreen = () => {
           disabled={cartItems.length === 0}
           onPress={() => {
             dispatch(
-              ordersActions.addToCart(cartItems, cartTotalAmount),
+              ordersOperations.addOrder(cartItems, cartTotalAmount),
             );
           }}
         />
@@ -63,7 +63,7 @@ const CartScreen = () => {
             amount={item.sum}
             deletable
             onRemove={() => {
-              dispatch(cartActions.removeFromCart(item.productId));
+              dispatch(cartOperations.removeFromCart(item.productId));
             }}
           />
         )}

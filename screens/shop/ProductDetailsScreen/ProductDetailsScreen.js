@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Image, ScrollView, Text, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import * as cartActions from '../../../store/actions/cart';
+import { useDispatch, useSelector } from 'react-redux';
+import * as cartOperations from '../../../store/operations/cart';
 import s from './styles';
 import Colors from '../../../constants/Colors';
 
@@ -23,7 +23,7 @@ const ProductDetailsScreen = ({ route }) => {
           color={Colors.defaultPrimary}
           title="Add To Card"
           onPress={() => {
-            dispatch(cartActions.addToCart(product));
+            dispatch(cartOperations.addToCart(product));
           }}
         />
       </View>
