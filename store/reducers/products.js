@@ -8,8 +8,8 @@ import {
 import Product from '../../models/Product';
 
 const INITIAL_STATE = {
-  userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1'),
   availableProducts: PRODUCTS,
+  userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1'),
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -72,8 +72,8 @@ export default (state = INITIAL_STATE, action) => {
 
     case FETCH_PRODUCTS: {
       return {
-        userProducts: action.products,
-        availableProducts: action.products.filter(
+        availableProducts: action.products,
+        userProducts: action.products.filter(
           (prod) => prod.ownerId === 'u1',
         ),
       };
