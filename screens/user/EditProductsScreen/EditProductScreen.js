@@ -10,18 +10,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
-} from '../../../util/validators';
+} from '../../../helpers/validators';
 import s from './styles';
 import Input from '../../../components/UI/Input/Input';
 import { useForm } from '../../../hooks/formHook';
 import * as productsOperations from '../../../store/operations/products';
+import {
+  createProduct,
+  productsSelector,
+} from '../../../store_new/shop/ProductsSlice';
 
 const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
+
   const dispatch = useDispatch();
-  const editedProduct = useSelector((state) =>
-    state.products.userProducts.find((prod) => prod.id === prodId),
+  const { userProducts } = useSelector(productsSelector);
+  const editedProduct = userProducts.find(
+    (prod) => prod.id === prodId,
   );
+
   const initCreateProdInputs = {
     title: {
       value: '',
@@ -68,21 +75,21 @@ const EditProductsScreen = ({ route, navigation }) => {
     }
     if (editedProduct) {
       dispatch(
-        productsOperations.updateProduct(
+        productsOperations.updateProduct({
           prodId,
-          formState.inputs.title.value,
-          formState.inputs.description.value,
-          formState.inputs.imageUrl.value,
-        ),
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+          imageUrl: formState.inputs.imageUrl.value,
+        }),
       );
     } else {
       dispatch(
-        productsOperations.createProduct(
-          formState.inputs.title.value,
-          formState.inputs.description.value,
-          formState.inputs.imageUrl.value,
-          +formState.inputs.price.value,
-        ),
+        createProduct({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+          imageUrl: formState.inputs.imageUrl.value,
+          price: +formState.inputs.price.value,
+        }),
       );
     }
     navigation.goBack();

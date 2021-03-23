@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
+import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen/ProductsOverviewScreen';
 import ProductDetailsScreen from '../screens/shop/ProductDetailsScreen/ProductDetailsScreen';
 import CartScreen from '../screens/shop/CartScreen/CartScreen';
 import { createStackNavigator } from '@react-navigation/stack';

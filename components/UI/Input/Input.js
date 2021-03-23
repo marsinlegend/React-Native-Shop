@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import { validate } from '../../../util/validators';
+import { validate } from '../../../helpers/validators';
 import s from './styles';
 
 const inputReducer = (state, action) => {

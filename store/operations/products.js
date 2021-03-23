@@ -41,7 +41,7 @@ export const createProduct = (
     dispatch({
       type: CREATE_PRODUCT,
       productData: {
-        id: res.product.id,
+        id: res.data.product.id,
         title,
         description,
         imageUrl,
