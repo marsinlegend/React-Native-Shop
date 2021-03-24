@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
 import Colors from '../../../constants/Colors';
 import {
+  deleteProduct,
   fetchProducts,
   productsSelector,
 } from '../../../store_new/shop/ProductsSlice';
@@ -38,8 +39,8 @@ const UserProductsScreen = ({ navigation }) => {
         {
           text: 'Yes',
           style: 'destructive',
-          onPress: () => {},
-        }, //TODO dispatch(deleteProduct(id))
+          onPress: () => dispatch(deleteProduct({ id })),
+        },
       ],
     );
   };

@@ -70,6 +70,24 @@ export const updateProduct = createAsyncThunk(
   },
 );
 
+export const deleteProduct = createAsyncThunk(
+  'products/deleteProduct',
+  async ({ id }, thunkAPI) => {
+    try {
+      const res = await Api.deleteProduct(id);
+
+      if (res.status === 200) {
+        return { ...res.data };
+      } else {
+        return thunkAPI.rejectWithValue(res.data);
+      }
+    } catch (e) {
+      console.log('Error', e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  },
+);
+
 export const productsSlice = createSlice({
   name: 'products',
   initialState: {
@@ -117,6 +135,21 @@ export const productsSlice = createSlice({
       state.isFetching = true;
     },
     [createProduct.rejected]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = payload.message;
+    },
+    [updateProduct.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+
+      state.updatedProduct = payload.product;
+      state.message = payload.message;
+    },
+    [updateProduct.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [updateProduct.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;

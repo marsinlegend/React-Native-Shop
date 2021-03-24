@@ -11,4 +11,7 @@ export const Api = {
   updateProductById({ id, ...body }) {
     return axios.patch(`${url.PRODUCTS}/${id}`, body);
   },
+  deleteProduct(id) {
+    return axios.delete(`${url.PRODUCTS}/${id}`);
+  },
 };
