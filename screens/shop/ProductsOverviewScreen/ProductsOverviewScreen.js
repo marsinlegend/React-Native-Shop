@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -6,6 +6,8 @@ import {
   Text,
   View,
 } from 'react-native';
+
+import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
 import * as cartOperations from '../../../store/operations/cart';
@@ -17,15 +19,11 @@ import {
   productsSelector,
 } from '../../../store_new/shop/ProductsSlice';
 
-const ProductsOverviewScreen = ({ navigation }) => {
+const ProductsOverviewScreen = ({ navigation, ...props }) => {
   const dispatch = useDispatch();
   const { availableProducts, isFetching, isError } = useSelector(
     productsSelector,
   );
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
 
   const onSelectHandler = (id, title) => {
     navigation.navigate('ProductDetails', {
@@ -33,6 +31,12 @@ const ProductsOverviewScreen = ({ navigation }) => {
       productTitle: title,
     });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchProducts());
+    }, [dispatch]),
+  );
 
   if (isError) {
     return (

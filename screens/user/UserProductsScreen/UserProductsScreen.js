@@ -1,15 +1,27 @@
-import React from 'react';
-import { Alert, Button, FlatList } from 'react-native';
+import React, { useCallback } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  FlatList,
+  Text,
+  View,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
 import Colors from '../../../constants/Colors';
-import * as productsOperations from '../../../store/operations/products';
+import {
+  fetchProducts,
+  productsSelector,
+} from '../../../store_new/shop/ProductsSlice';
+import { useFocusEffect } from '@react-navigation/native';
+import s from '../../shop/ProductsOverviewScreen/styles';
 
 const UserProductsScreen = ({ navigation }) => {
-  const userProducts = useSelector(
-    (state) => state.products.userProducts,
-  );
   const dispatch = useDispatch();
+  const { userProducts, isFetching, isError } = useSelector(
+    productsSelector,
+  );
 
   const onEditHandler = (id) => {
     navigation.navigate('EditProduct', {
@@ -26,13 +38,48 @@ const UserProductsScreen = ({ navigation }) => {
         {
           text: 'Yes',
           style: 'destructive',
-          onPress: () => {
-            dispatch(productsOperations.deleteProduct(id));
-          },
-        },
+          onPress: () => {},
+        }, //TODO dispatch(deleteProduct(id))
       ],
     );
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchProducts());
+    }, [dispatch]),
+  );
+
+  if (isError) {
+    return (
+      <View style={s.center}>
+        <Text>An Error occurred!</Text>
+        <Button
+          title="Try again"
+          onPress={() => dispatch(fetchProducts())}
+        />
+      </View>
+    );
+  }
+
+  if (isFetching) {
+    return (
+      <View style={s.center}>
+        <ActivityIndicator
+          size="large"
+          color={Colors.defaultPrimary}
+        />
+      </View>
+    );
+  }
+
+  if (!isFetching && userProducts?.length === 0) {
+    return (
+      <View style={s.center}>
+        <Text>You have no products. Maybe try add one!</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList

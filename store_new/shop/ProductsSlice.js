@@ -47,28 +47,28 @@ export const createProduct = createAsyncThunk(
   },
 );
 
-// export const updateProduct = createAsyncThunk(
-//   'products/updateProduct',
-//   async ({ id, title, description, imageUrl }, thunkAPI) => {
-//     try {
-//       const res = await Api.createProduct({
-//         id,
-//         title,
-//         description,
-//         imageUrl,
-//       });
-//
-//       if (res.status === 201) {
-//         return { ownerId: 'u1', ...res.data };
-//       } else {
-//         return thunkAPI.rejectWithValue(res.data);
-//       }
-//     } catch (e) {
-//       console.log('Error', e.response.data);
-//       return thunkAPI.rejectWithValue(e.response.data);
-//     }
-//   },
-// );
+export const updateProduct = createAsyncThunk(
+  'products/updateProduct',
+  async ({ id, title, description, imageUrl }, thunkAPI) => {
+    try {
+      const res = await Api.updateProductById({
+        id,
+        title,
+        description,
+        imageUrl,
+      });
+
+      if (res.status === 201) {
+        return { ownerId: 'u1', ...res.data };
+      } else {
+        return thunkAPI.rejectWithValue(res.data);
+      }
+    } catch (e) {
+      console.log('Error', e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  },
+);
 
 export const productsSlice = createSlice({
   name: 'products',

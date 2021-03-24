@@ -14,10 +14,10 @@ import {
 import s from './styles';
 import Input from '../../../components/UI/Input/Input';
 import { useForm } from '../../../hooks/formHook';
-import * as productsOperations from '../../../store/operations/products';
 import {
   createProduct,
   productsSelector,
+  updateProduct,
 } from '../../../store_new/shop/ProductsSlice';
 
 const EditProductsScreen = ({ route, navigation }) => {
@@ -75,8 +75,8 @@ const EditProductsScreen = ({ route, navigation }) => {
     }
     if (editedProduct) {
       dispatch(
-        productsOperations.updateProduct({
-          prodId,
+        updateProduct({
+          id: prodId,
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
           imageUrl: formState.inputs.imageUrl.value,

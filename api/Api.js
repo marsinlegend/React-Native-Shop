@@ -8,4 +8,7 @@ export const Api = {
   fetchProducts() {
     return axios.get(url.PRODUCTS);
   },
+  updateProductById({ id, ...body }) {
+    return axios.patch(`${url.PRODUCTS}/${id}`, body);
+  },
 };
