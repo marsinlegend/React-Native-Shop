@@ -47,7 +47,10 @@ const CartScreen = () => {
           disabled={cartItems.length === 0}
           onPress={() => {
             dispatch(
-              ordersOperations.addOrder(cartItems, cartTotalAmount),
+              ordersOperations.addOrder({
+                items: cartItems,
+                amount: cartTotalAmount,
+              }),
             );
           }}
         />

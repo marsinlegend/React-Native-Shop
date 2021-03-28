@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -15,17 +16,26 @@ import s from './styles';
 import Input from '../../../components/UI/Input/Input';
 import { useForm } from '../../../hooks/formHook';
 import {
+  clearState,
   createProduct,
   productsSelector,
   updateProduct,
 } from '../../../store_new/shop/ProductsSlice';
+import CentredView from '../../../components/UI/CentredView/CentredView';
+import Colors from '../../../constants/Colors';
 
 const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
 
   const dispatch = useDispatch();
-  const { userProducts } = useSelector(productsSelector);
-  const editedProduct = userProducts.find(
+  const {
+    userProducts,
+    isFetching,
+    isError,
+    errMessage,
+    isSuccess,
+  } = useSelector(productsSelector);
+  const editedProduct = userProducts?.find(
     (prod) => prod.id === prodId,
   );
 
@@ -60,7 +70,7 @@ const EditProductsScreen = ({ route, navigation }) => {
     false,
   );
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     if (!formState.isValid) {
       Alert.alert(
         'Wrong input!',
@@ -74,7 +84,7 @@ const EditProductsScreen = ({ route, navigation }) => {
       return;
     }
     if (editedProduct) {
-      dispatch(
+      await dispatch(
         updateProduct({
           id: prodId,
           title: formState.inputs.title.value,
@@ -83,7 +93,7 @@ const EditProductsScreen = ({ route, navigation }) => {
         }),
       );
     } else {
-      dispatch(
+      await dispatch(
         createProduct({
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
@@ -92,12 +102,31 @@ const EditProductsScreen = ({ route, navigation }) => {
         }),
       );
     }
-    navigation.goBack();
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
     navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
+
+  useEffect(() => {
+    if (isError) {
+      dispatch(clearState());
+      Alert.alert('An Error occurred!', errMessage, [
+        {
+          text: 'Okay',
+        },
+      ]);
+    }
+    if (isSuccess) {
+      navigation.goBack();
+    }
+  }, [isError, isSuccess]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearState());
+    };
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -164,6 +193,15 @@ const EditProductsScreen = ({ route, navigation }) => {
             returnKeyType="done"
           />
         </View>
+
+        {isFetching && (
+          <CentredView>
+            <ActivityIndicator
+              size="large"
+              color={Colors.defaultPrimary}
+            />
+          </CentredView>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );

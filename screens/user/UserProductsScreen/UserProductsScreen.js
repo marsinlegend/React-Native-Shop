@@ -1,28 +1,31 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   ActivityIndicator,
   Alert,
   Button,
   FlatList,
   Text,
-  View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
 import Colors from '../../../constants/Colors';
 import {
+  clearState,
   deleteProduct,
   fetchProducts,
   productsSelector,
 } from '../../../store_new/shop/ProductsSlice';
 import { useFocusEffect } from '@react-navigation/native';
-import s from '../../shop/ProductsOverviewScreen/styles';
+import CentredView from '../../../components/UI/CentredView/CentredView';
 
 const UserProductsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { userProducts, isFetching, isError } = useSelector(
-    productsSelector,
-  );
+  const {
+    userProducts,
+    isFetching,
+    isError,
+    errMessage,
+  } = useSelector(productsSelector);
 
   const onEditHandler = (id) => {
     navigation.navigate('EditProduct', {
@@ -39,49 +42,50 @@ const UserProductsScreen = ({ navigation }) => {
         {
           text: 'Yes',
           style: 'destructive',
-          onPress: () => dispatch(deleteProduct({ id })),
+          onPress: () => {
+            dispatch(deleteProduct({ id }));
+            clearState();
+            dispatch(fetchProducts());
+          },
         },
       ],
     );
   };
 
+  useEffect(() => {
+    if (isError) {
+      clearState();
+      Alert.alert('An Error!', errMessage, [
+        {
+          text: 'Try again',
+          onPress: () => dispatch(fetchProducts()),
+        },
+      ]);
+    }
+  }, [isError]);
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchProducts());
     }, [dispatch]),
   );
 
-  if (isError) {
-    return (
-      <View style={s.center}>
-        <Text>An Error occurred!</Text>
-        <Button
-          title="Try again"
-          onPress={() => dispatch(fetchProducts())}
-        />
-      </View>
-    );
-  }
-
   if (isFetching) {
     return (
-      <View style={s.center}>
+      <CentredView>
         <ActivityIndicator
           size="large"
           color={Colors.defaultPrimary}
         />
-      </View>
+      </CentredView>
     );
   }
-
-  if (!isFetching && userProducts?.length === 0) {
+  if (!userProducts) {
     return (
-      <View style={s.center}>
-        <Text>You have no products. Maybe try add one!</Text>
-      </View>
+      <CentredView>
+        <Text>No user products found. Maybe try add some!</Text>
+      </CentredView>
     );
   }
-
   return (
     <FlatList
       data={userProducts}

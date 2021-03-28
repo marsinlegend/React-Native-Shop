@@ -58,7 +58,7 @@ export const updateProduct = createAsyncThunk(
         imageUrl,
       });
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         return { ownerId: 'u1', ...res.data };
       } else {
         return thunkAPI.rejectWithValue(res.data);
@@ -96,7 +96,7 @@ export const productsSlice = createSlice({
     isFetching: false,
     isSuccess: false,
     isError: false,
-    errorMessage: '',
+    errMessage: '',
   },
   reducers: {
     clearState: (state) => {
@@ -110,7 +110,6 @@ export const productsSlice = createSlice({
   extraReducers: {
     [fetchProducts.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
-      state.isSuccess = true;
 
       state.availableProducts = payload.products;
       state.userProducts = payload.products.filter(
@@ -120,13 +119,13 @@ export const productsSlice = createSlice({
     [fetchProducts.pending]: (state) => {
       state.isFetching = true;
     },
-    [fetchProducts.rejected]: (state) => {
+    [fetchProducts.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
+      state.errMessage = payload;
     },
     [createProduct.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
-      state.isSuccess = true;
 
       state.availableProducts.concat(payload.product);
       state.userProducts.concat(payload.product);
@@ -137,7 +136,7 @@ export const productsSlice = createSlice({
     [createProduct.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = payload.message;
+      state.errMessage = payload;
     },
     [updateProduct.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
@@ -152,7 +151,21 @@ export const productsSlice = createSlice({
     [updateProduct.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = payload.message;
+      state.errMessage = payload;
+    },
+    [deleteProduct.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+
+      state.message = payload.message;
+    },
+    [deleteProduct.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [deleteProduct.rejected]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errMessage = payload;
     },
   },
 });

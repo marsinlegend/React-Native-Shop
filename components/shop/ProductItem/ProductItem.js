@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Image,
   Platform,
   Text,
@@ -9,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import s from './styles';
-import Colors from '../../../constants/Colors';
 import Card from '../../UI/Card/Card';
 
 const ProductItem = ({ title, price, image, onSelect, children }) => {

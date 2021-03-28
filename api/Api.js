@@ -14,4 +14,7 @@ export const Api = {
   deleteProduct(id) {
     return axios.delete(`${url.PRODUCTS}/${id}`);
   },
+  createOrder({ userId, ...body }) {
+    return axios.post(`${url.ORDERS}/${userId}`, body);
+  },
 };

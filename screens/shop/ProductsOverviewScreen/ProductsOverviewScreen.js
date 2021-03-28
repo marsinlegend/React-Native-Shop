@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   FlatList,
   Text,
-  View,
 } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
@@ -12,18 +12,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
 import * as cartOperations from '../../../store/operations/cart';
 import Colors from '../../../constants/Colors';
-import s from './styles';
 //
 import {
+  clearState,
   fetchProducts,
   productsSelector,
 } from '../../../store_new/shop/ProductsSlice';
+import CentredView from '../../../components/UI/CentredView/CentredView';
 
 const ProductsOverviewScreen = ({ navigation, ...props }) => {
   const dispatch = useDispatch();
-  const { availableProducts, isFetching, isError } = useSelector(
-    productsSelector,
-  );
+  const {
+    availableProducts,
+    isFetching,
+    isError,
+    errMessage,
+  } = useSelector(productsSelector);
 
   const onSelectHandler = (id, title) => {
     navigation.navigate('ProductDetails', {
@@ -32,40 +36,38 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
     });
   };
 
+  useEffect(() => {
+    if (isError) {
+      clearState();
+      Alert.alert('An Error occurred!', errMessage, [
+        {
+          text: 'Try again',
+          onPress: () => dispatch(fetchProducts()),
+        },
+      ]);
+    }
+  }, [isError]);
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchProducts());
     }, [dispatch]),
   );
 
-  if (isError) {
-    return (
-      <View style={s.center}>
-        <Text>An Error occurred!</Text>
-        <Button
-          title="Try again"
-          onPress={() => dispatch(fetchProducts())}
-        />
-      </View>
-    );
-  }
-
   if (isFetching) {
     return (
-      <View style={s.center}>
+      <CentredView>
         <ActivityIndicator
           size="large"
           color={Colors.defaultPrimary}
         />
-      </View>
+      </CentredView>
     );
   }
-
-  if (!isFetching && availableProducts?.length === 0) {
+  if (!availableProducts) {
     return (
-      <View style={s.center}>
+      <CentredView>
         <Text>No products found. Maybe try add some!</Text>
-      </View>
+      </CentredView>
     );
   }
 
