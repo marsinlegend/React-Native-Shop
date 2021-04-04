@@ -1,36 +1,42 @@
 import React from 'react';
-import { Button, FlatList, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  FlatList,
+  Text,
+  View,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from '../../../components/UI/Card/Card';
-import Colors from '../../../constants/Colors';
-import CartItem from '../../../components/shop/CartItem/CartItem';
-import * as ordersOperations from '../../../store/operations/orders';
-import * as cartOperations from '../../../store/operations/cart';
+import {
+  cartSelector,
+  removeFromCart,
+} from '../../../store/shop/CartSlice';
 import s from './styles';
+import Colors from '../../../constants/Colors';
+import {
+  createOrder,
+  ordersSelector,
+} from '../../../store/shop/OrdersSlice';
+import CartItem from '../../../components/shop/CartItem/CartItem';
 
 const CartScreen = () => {
-  const cartTotalAmount = useSelector(
-    (state) => state.cart.totalAmount,
-  );
+  const { totalAmount, items } = useSelector(cartSelector);
+  const { isFetching } = useSelector(ordersSelector);
   const dispatch = useDispatch();
 
-  const cartItems = useSelector((state) => {
-    const transformedCartItems = [];
+  let cartItems = [];
 
-    for (const key in state.cart.items) {
-      transformedCartItems.push({
-        productId: key,
-        productTitle: state.cart.items[key].productTitle,
-        productPrice: state.cart.items[key].productPrice,
-        quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum,
-      });
-    }
-
-    return transformedCartItems.sort((a, b) =>
-      a.productId > b.productId ? 1 : -1,
-    );
-  });
+  for (const key in items) {
+    cartItems.push({
+      productId: key,
+      productTitle: items[key].productTitle,
+      productPrice: items[key].productPrice,
+      quantity: items[key].quantity,
+      sum: items[key].sum,
+    });
+  }
+  cartItems.sort((a, b) => (a.productId > b.productId ? 1 : -1));
 
   return (
     <View style={s.screen}>
@@ -38,22 +44,29 @@ const CartScreen = () => {
         <Text style={s.summaryText}>
           Total:{' '}
           <Text style={s.amount}>
-            {Math.round((cartTotalAmount.toFixed(2) * 100) / 100)}
+            {Math.round((totalAmount.toFixed(2) * 100) / 100)}
           </Text>
         </Text>
-        <Button
-          title="Order Now"
-          color={Colors.defaultPrimary}
-          disabled={cartItems.length === 0}
-          onPress={() => {
-            dispatch(
-              ordersOperations.addOrder({
-                items: cartItems,
-                amount: cartTotalAmount,
-              }),
-            );
-          }}
-        />
+        {isFetching ? (
+          <ActivityIndicator
+            size="small"
+            color={Colors.defaultPrimary}
+          />
+        ) : (
+          <Button
+            title="Order Now"
+            color={Colors.defaultPrimary}
+            disabled={cartItems.length === 0}
+            onPress={() => {
+              dispatch(
+                createOrder({
+                  orderItems: cartItems,
+                  totalAmount,
+                }),
+              );
+            }}
+          />
+        )}
       </Card>
 
       <FlatList
@@ -66,7 +79,7 @@ const CartScreen = () => {
             amount={item.sum}
             deletable
             onRemove={() => {
-              dispatch(cartOperations.removeFromCart(item.productId));
+              dispatch(removeFromCart(item.productId));
             }}
           />
         )}

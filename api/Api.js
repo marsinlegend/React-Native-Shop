@@ -1,20 +1,24 @@
 import axios from 'axios';
 import { apiUrl as url } from './urls';
 
+const axiosApi = axios.create({
+  baseURL: 'http://192.168.1.5:5000',
+});
+
 export const Api = {
   createProduct(body) {
-    return axios.post(url.PRODUCTS, body);
+    return axiosApi.post(url.PRODUCTS, body);
   },
   fetchProducts() {
-    return axios.get(url.PRODUCTS);
+    return axiosApi.get(url.PRODUCTS);
   },
-  updateProductById({ id, ...body }) {
-    return axios.patch(`${url.PRODUCTS}/${id}`, body);
+  updateProductById({ id, body }) {
+    return axiosApi.patch(`${url.PRODUCTS}/${id}`, body);
   },
   deleteProduct(id) {
-    return axios.delete(`${url.PRODUCTS}/${id}`);
+    return axiosApi.delete(`${url.PRODUCTS}/${id}`);
   },
-  createOrder({ userId, ...body }) {
-    return axios.post(`${url.ORDERS}/${userId}`, body);
+  createOrder(body) {
+    return axiosApi.post(`${url.ORDERS}`, body);
   },
 };

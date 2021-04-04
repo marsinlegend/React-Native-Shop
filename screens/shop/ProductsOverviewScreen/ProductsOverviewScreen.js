@@ -10,17 +10,17 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/shop/ProductItem/ProductItem';
-import * as cartOperations from '../../../store/operations/cart';
 import Colors from '../../../constants/Colors';
+import { addToCart } from '../../../store/shop/CartSlice';
 //
 import {
   clearState,
   fetchProducts,
   productsSelector,
-} from '../../../store_new/shop/ProductsSlice';
+} from '../../../store/shop/ProductsSlice';
 import CentredView from '../../../components/UI/CentredView/CentredView';
 
-const ProductsOverviewScreen = ({ navigation, ...props }) => {
+const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const {
     availableProducts,
@@ -36,22 +36,27 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
     });
   };
 
-  useEffect(() => {
-    if (isError) {
-      clearState();
-      Alert.alert('An Error occurred!', errMessage, [
-        {
-          text: 'Try again',
-          onPress: () => dispatch(fetchProducts()),
-        },
-      ]);
-    }
-  }, [isError]);
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchProducts());
-    }, [dispatch]),
+      console.log('focused Prod Overview');
+
+      return () => {
+        dispatch(clearState());
+        console.log('unfocused cleared');
+      };
+    }, []),
   );
+  useEffect(() => {
+    if (isError) {
+      Alert.alert('Error occurred!', errMessage, [
+        {
+          text: 'Okay',
+        },
+      ]);
+      dispatch(clearState());
+    }
+  }, []);
 
   if (isFetching) {
     return (
@@ -63,7 +68,7 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
       </CentredView>
     );
   }
-  if (!availableProducts) {
+  if (availableProducts.length === 0) {
     return (
       <CentredView>
         <Text>No products found. Maybe try add some!</Text>
@@ -95,7 +100,7 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
             color={Colors.defaultPrimary}
             title="To Card"
             onPress={() => {
-              dispatch(cartOperations.addToCart(item));
+              dispatch(addToCart(item));
             }}
           />
         </ProductItem>

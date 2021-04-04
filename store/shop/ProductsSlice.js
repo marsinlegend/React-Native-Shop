@@ -3,7 +3,7 @@ import { Api } from '../../api/Api';
 
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
-  async (_, thunkAPI) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await Api.fetchProducts();
 
@@ -15,18 +15,21 @@ export const fetchProducts = createAsyncThunk(
           })),
         };
       } else {
-        return thunkAPI.rejectWithValue(res.data);
+        return rejectWithValue(res.data);
       }
     } catch (e) {
       console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
 
 export const createProduct = createAsyncThunk(
   'products/createProduct',
-  async ({ title, description, imageUrl, price }, thunkAPI) => {
+  async (
+    { title, description, imageUrl, price },
+    { rejectWithValue },
+  ) => {
     try {
       const res = await Api.createProduct({
         title,
@@ -38,52 +41,53 @@ export const createProduct = createAsyncThunk(
       if (res.status === 201) {
         return { ownerId: 'u1', ...res.data };
       } else {
-        return thunkAPI.rejectWithValue(res.data);
+        return rejectWithValue(res.data);
       }
     } catch (e) {
       console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
 
 export const updateProduct = createAsyncThunk(
   'products/updateProduct',
-  async ({ id, title, description, imageUrl }, thunkAPI) => {
+  async (
+    { id, title, description, imageUrl },
+    { rejectWithValue },
+  ) => {
     try {
       const res = await Api.updateProductById({
         id,
-        title,
-        description,
-        imageUrl,
+        body: { title, description, imageUrl },
       });
 
       if (res.status === 200) {
         return { ownerId: 'u1', ...res.data };
       } else {
-        return thunkAPI.rejectWithValue(res.data);
+        return rejectWithValue(res.data);
       }
     } catch (e) {
       console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
 
 export const deleteProduct = createAsyncThunk(
   'products/deleteProduct',
-  async ({ id }, thunkAPI) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
       const res = await Api.deleteProduct(id);
 
       if (res.status === 200) {
-        return { ...res.data };
+        return { prodId: id, ...res.data };
       } else {
-        return thunkAPI.rejectWithValue(res.data);
+        return rejectWithValue(res.data);
       }
     } catch (e) {
       console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
@@ -91,11 +95,11 @@ export const deleteProduct = createAsyncThunk(
 export const productsSlice = createSlice({
   name: 'products',
   initialState: {
-    userProducts: null,
-    availableProducts: null,
+    userProducts: [],
+    availableProducts: [],
     isFetching: false,
     isSuccess: false,
-    isError: false,
+    isError: false, //TODO: Fix error handling
     errMessage: '',
   },
   reducers: {
@@ -103,6 +107,7 @@ export const productsSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.isFetching = false;
+      state.errMessage = '';
 
       return state;
     },
@@ -126,6 +131,7 @@ export const productsSlice = createSlice({
     },
     [createProduct.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
+      state.isSuccess = true;
 
       state.availableProducts.concat(payload.product);
       state.userProducts.concat(payload.product);
@@ -157,6 +163,12 @@ export const productsSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
 
+      state.userProducts = state.userProducts.filter(
+        (prod) => prod.id !== payload.prodId,
+      );
+      state.availableProducts = state.availableProducts.filter(
+        (prod) => prod.id !== payload.prodId,
+      );
       state.message = payload.message;
     },
     [deleteProduct.pending]: (state) => {

@@ -20,7 +20,7 @@ import {
   createProduct,
   productsSelector,
   updateProduct,
-} from '../../../store_new/shop/ProductsSlice';
+} from '../../../store/shop/ProductsSlice';
 import CentredView from '../../../components/UI/CentredView/CentredView';
 import Colors from '../../../constants/Colors';
 
@@ -109,8 +109,13 @@ const EditProductsScreen = ({ route, navigation }) => {
   }, [submitHandler]);
 
   useEffect(() => {
-    if (isError) {
+    return () => {
       dispatch(clearState());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isError) {
       Alert.alert('An Error occurred!', errMessage, [
         {
           text: 'Okay',
@@ -120,13 +125,7 @@ const EditProductsScreen = ({ route, navigation }) => {
     if (isSuccess) {
       navigation.goBack();
     }
-  }, [isError, isSuccess]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearState());
-    };
-  }, []);
+  }, [isSuccess]);
 
   return (
     <KeyboardAvoidingView

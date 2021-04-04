@@ -3,22 +3,21 @@ import { Api } from '../../api/Api';
 
 export const createOrder = createAsyncThunk(
   'orders/createOrder',
-  async ({ items, amount }, thunkAPI) => {
+  async ({ orderItems, totalAmount }, { rejectWithValue }) => {
     try {
       const res = await Api.createOrder({
-        userId: 'u1',
-        items,
-        amount,
+        orderItems,
+        totalAmount,
       });
 
       if (res.status === 201) {
         return { ...res.data };
       } else {
-        return thunkAPI.rejectWithValue(res.data);
+        return rejectWithValue(res.data);
       }
     } catch (e) {
       console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
@@ -26,7 +25,7 @@ export const createOrder = createAsyncThunk(
 export const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
-    orders: null,
+    orders: [],
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -45,7 +44,7 @@ export const ordersSlice = createSlice({
     [createOrder.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
 
-      state.order.concat(payload.order);
+      state.orders.concat(payload.order);
     },
     [createOrder.pending]: (state) => {
       state.isFetching = true;

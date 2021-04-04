@@ -14,7 +14,7 @@ import {
   deleteProduct,
   fetchProducts,
   productsSelector,
-} from '../../../store_new/shop/ProductsSlice';
+} from '../../../store/shop/ProductsSlice';
 import { useFocusEffect } from '@react-navigation/native';
 import CentredView from '../../../components/UI/CentredView/CentredView';
 
@@ -45,29 +45,32 @@ const UserProductsScreen = ({ navigation }) => {
           onPress: () => {
             dispatch(deleteProduct({ id }));
             clearState();
-            dispatch(fetchProducts());
           },
         },
       ],
     );
   };
 
-  useEffect(() => {
-    if (isError) {
-      clearState();
-      Alert.alert('An Error!', errMessage, [
-        {
-          text: 'Try again',
-          onPress: () => dispatch(fetchProducts()),
-        },
-      ]);
-    }
-  }, [isError]);
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchProducts());
-    }, [dispatch]),
+      console.log('focused User Prod');
+
+      return () => {
+        dispatch(clearState());
+        console.log('unfocused cleared');
+      };
+    }, []),
   );
+  useEffect(() => {
+    if (isError) {
+      Alert.alert('An Error!', errMessage, [
+        {
+          text: 'Okay',
+        },
+      ]);
+    }
+  }, []);
 
   if (isFetching) {
     return (
@@ -79,7 +82,7 @@ const UserProductsScreen = ({ navigation }) => {
       </CentredView>
     );
   }
-  if (!userProducts) {
+  if (userProducts.length === 0) {
     return (
       <CentredView>
         <Text>No user products found. Maybe try add some!</Text>
