@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -54,23 +54,28 @@ const UserProductsScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchProducts());
-      console.log('focused User Prod');
 
       return () => {
         dispatch(clearState());
-        console.log('unfocused cleared');
       };
     }, []),
   );
-  useEffect(() => {
-    if (isError) {
-      Alert.alert('An Error!', errMessage, [
-        {
-          text: 'Okay',
-        },
-      ]);
-    }
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (isError) {
+        Alert.alert(
+          'Error while loading user products!',
+          errMessage,
+          [
+            {
+              text: 'Okay',
+            },
+          ],
+        );
+        dispatch(clearState());
+      }
+    }, [isError]),
+  );
 
   if (isFetching) {
     return (
@@ -91,6 +96,8 @@ const UserProductsScreen = ({ navigation }) => {
   }
   return (
     <FlatList
+      onRefresh={() => dispatch(fetchProducts())}
+      refreshing={isFetching}
       data={userProducts}
       renderItem={({ item }) => (
         <ProductItem

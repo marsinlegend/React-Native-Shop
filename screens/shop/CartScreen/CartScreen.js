@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   FlatList,
   Text,
@@ -15,14 +16,18 @@ import {
 import s from './styles';
 import Colors from '../../../constants/Colors';
 import {
+  clearState,
   createOrder,
   ordersSelector,
 } from '../../../store/shop/OrdersSlice';
 import CartItem from '../../../components/shop/CartItem/CartItem';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CartScreen = () => {
   const { totalAmount, items } = useSelector(cartSelector);
-  const { isFetching } = useSelector(ordersSelector);
+  const { isFetching, isError, errMessage } = useSelector(
+    ordersSelector,
+  );
   const dispatch = useDispatch();
 
   let cartItems = [];
@@ -37,6 +42,19 @@ const CartScreen = () => {
     });
   }
   cartItems.sort((a, b) => (a.productId > b.productId ? 1 : -1));
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isError) {
+        Alert.alert('Create Order error!', errMessage, [
+          {
+            text: 'Okay',
+          },
+        ]);
+        dispatch(clearState());
+      }
+    }, [isError]),
+  );
 
   return (
     <View style={s.screen}>

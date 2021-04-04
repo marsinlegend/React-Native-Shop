@@ -28,13 +28,9 @@ const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
 
   const dispatch = useDispatch();
-  const {
-    userProducts,
-    isFetching,
-    isError,
-    errMessage,
-    isSuccess,
-  } = useSelector(productsSelector);
+  const { userProducts, isFetching, isSuccess } = useSelector(
+    productsSelector,
+  );
   const editedProduct = userProducts?.find(
     (prod) => prod.id === prodId,
   );
@@ -115,13 +111,6 @@ const EditProductsScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (isError) {
-      Alert.alert('An Error occurred!', errMessage, [
-        {
-          text: 'Okay',
-        },
-      ]);
-    }
     if (isSuccess) {
       navigation.goBack();
     }

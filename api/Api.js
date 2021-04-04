@@ -21,4 +21,7 @@ export const Api = {
   createOrder(body) {
     return axiosApi.post(`${url.ORDERS}`, body);
   },
+  fetchOrders() {
+    return axiosApi.get(url.ORDERS);
+  },
 };
