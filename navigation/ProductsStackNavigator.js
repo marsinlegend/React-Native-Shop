@@ -1,13 +1,13 @@
 import React from 'react';
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen/ProductsOverviewScreen';
 import ProductDetailsScreen from '../screens/shop/ProductDetailsScreen/ProductDetailsScreen';
-import CartScreen from '../screens/shop/CartScreen/CartScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/UI/HeaderButton/HeaderButton';
 import { DrawerActions } from '@react-navigation/native';
 import NavOpt from './NavOptions';
+import CartScreen from '../screens/shop/CartScreen/CartScreen';
 
 const ProductsStackNavigator = (props) => {
   const Stack = createStackNavigator();
@@ -63,26 +63,12 @@ const ProductsStackNavigator = (props) => {
         }}
       />
 
-      <Stack.Screen name="Cart" component={CartScreen} />
-
       <Stack.Screen
-        name="Orders"
+        name="Cart"
         component={CartScreen}
         options={({ navigation, route }) => {
           return {
-            headerLeft: () => (
-              <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                  title="Menu"
-                  iconName={
-                    Platform.OS === 'android' ? 'md-menu' : 'ios-menu'
-                  }
-                  onPress={() => {
-                    navigation.openDrawer();
-                  }}
-                />
-              </HeaderButtons>
-            ),
+            title: 'Cart',
           };
         }}
       />

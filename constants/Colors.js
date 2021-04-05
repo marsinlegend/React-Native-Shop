@@ -3,7 +3,7 @@ export default {
   defaultPrimary: '#FF5722',
   lightPrimary: '#FFCCBC',
   textPrimary: '#FFFFFF',
-  accent: '#FFC107',
+  accent: '#ffac07',
   primaryText: '#393b39',
   secondaryText: '#757575',
   divider: '#BDBDBD',
