@@ -12,8 +12,11 @@ const styles = StyleSheet.create({
     maxHeight: 400,
     padding: 20,
   },
+  buttonBox: {
+    marginTop: 20,
+  },
   switchBox: {
-    marginTop: 10,
+    marginTop: 20,
   },
 });
 

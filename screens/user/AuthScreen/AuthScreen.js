@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
+  ActivityIndicator,
   Button,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
+  View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -16,9 +17,21 @@ import Input from '../../../components/UI/Input/Input';
 import { useForm } from '../../../hooks/formHook';
 import Card from '../../../components/UI/Card/Card';
 import Colors from '../../../constants/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  authSelector,
+  login,
+  signup,
+} from '../../../store/auth/authSlice';
+import CentredView from '../../../components/UI/CentredView/CentredView';
 
 const AuthScreen = ({ route, navigation }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const dispatch = useDispatch();
+  const { isFetching, isError, errMessage } = useSelector(
+    authSelector,
+  );
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -61,7 +74,24 @@ const AuthScreen = ({ route, navigation }) => {
     setIsLoginMode((prev) => !prev);
   };
 
-  const authHandler = () => {};
+  const authHandler = useCallback(async () => {
+    if (isLoginMode) {
+      await dispatch(
+        login({
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value,
+        }),
+      );
+    } else {
+      await dispatch(
+        signup({
+          name: formState.inputs.name.value,
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value,
+        }),
+      );
+    }
+  }, [dispatch, formState]);
 
   return (
     <KeyboardAvoidingView
@@ -110,37 +140,33 @@ const AuthScreen = ({ route, navigation }) => {
               returnKeyType="done"
             />
 
-            {/*{isFetching ? (*/}
-            {/*  <CentredView>*/}
-            {/*    <ActivityIndicator*/}
-            {/*      size="large"*/}
-            {/*      color={Colors.defaultPrimary}*/}
-            {/*    />*/}
-            {/*  </CentredView>*/}
-            {/*) : (*/}
-            <Button
-              title={isLoginMode ? 'Login' : 'Sign Up'}
-              color={Colors.darkPrimary}
-              disabled={!formState.isValid}
-              onPress={authHandler}
-            />
-            {/*)}*/}
+            {isFetching ? (
+              <CentredView>
+                <ActivityIndicator
+                  size="large"
+                  color={Colors.defaultPrimary}
+                />
+              </CentredView>
+            ) : (
+              <View style={s.buttonBox}>
+                <Button
+                  title={isLoginMode ? 'Login' : 'Sign Up'}
+                  color={Colors.darkPrimary}
+                  disabled={!formState.isValid}
+                  onPress={authHandler}
+                />
+              </View>
+            )}
 
-            <Card className={s.switchBox}>
-              <Text>
-                {isLoginMode
-                  ? 'Do not Register?'
-                  : 'Already register?'}
-              </Text>
-
+            <View style={s.switchBox}>
               <Button
                 title={`Switch to ${
-                  isLoginMode ? 'Register' : 'Login'
+                  isLoginMode ? ' Register' : 'Login'
                 }`}
                 color={Colors.accent}
                 onPress={switchModeHandler}
               />
-            </Card>
+            </View>
           </ScrollView>
         </Card>
       </LinearGradient>

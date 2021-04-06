@@ -1,14 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Api } from '../../api/Api';
 
-export const createOrder = createAsyncThunk(
-  'orders/createOrder',
-  async ({ orderItems, totalAmount }, { rejectWithValue }) => {
+export const signup = createAsyncThunk(
+  'auth/signup',
+  async ({ name, email, password }, { rejectWithValue }) => {
     try {
-      const res = await Api.createOrder({
-        orderItems,
-        totalAmount,
-      });
+      const res = await Api.signup({ name, email, password });
+
+      console.log(res);
 
       if (res.status === 201) {
         return { ...res.data };
@@ -22,13 +21,15 @@ export const createOrder = createAsyncThunk(
   },
 );
 
-export const fetchOrders = createAsyncThunk(
-  'orders/fetchOrders',
-  async (_, { rejectWithValue }) => {
+export const login = createAsyncThunk(
+  'auth/login',
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const res = await Api.fetchOrders();
+      const res = await Api.login({ email, password });
 
-      if (res.status === 201) {
+      console.log(res);
+
+      if (res.status === 200) {
         return { ...res.data };
       } else {
         return rejectWithValue(res.data);
@@ -40,10 +41,10 @@ export const fetchOrders = createAsyncThunk(
   },
 );
 
-export const ordersSlice = createSlice({
-  name: 'orders',
+export const authSlice = createSlice({
+  name: 'auth',
   initialState: {
-    orders: [],
+    token: [],
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -60,28 +61,28 @@ export const ordersSlice = createSlice({
     },
   },
   extraReducers: {
-    [createOrder.fulfilled]: (state, { payload }) => {
+    [signup.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
 
-      state.orders.concat(payload.order);
+      state.token = payload.token;
     },
-    [createOrder.pending]: (state) => {
+    [signup.pending]: (state) => {
       state.isFetching = true;
     },
-    [createOrder.rejected]: (state, { payload }) => {
+    [signup.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
       state.errMessage = payload;
     },
-    [fetchOrders.fulfilled]: (state, { payload }) => {
+    [login.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
 
-      state.orders = payload.orders;
+      state.token = payload.token;
     },
-    [fetchOrders.pending]: (state) => {
+    [login.pending]: (state) => {
       state.isFetching = true;
     },
-    [fetchOrders.rejected]: (state, { payload }) => {
+    [login.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
       state.errMessage = payload;
@@ -89,6 +90,6 @@ export const ordersSlice = createSlice({
   },
 });
 
-export const { clearState } = ordersSlice.actions;
+export const { clearState } = authSlice.actions;
 
-export const ordersSelector = (state) => state.orders;
+export const authSelector = (state) => state.auth;

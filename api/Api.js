@@ -19,9 +19,15 @@ export const Api = {
     return axiosApi.delete(`${url.PRODUCTS}/${id}`);
   },
   createOrder(body) {
-    return axiosApi.post(`${url.ORDERS}`, body);
+    return axiosApi.post(url.ORDERS, body);
   },
   fetchOrders() {
     return axiosApi.get(url.ORDERS);
+  },
+  signup(body) {
+    return axiosApi.post(url.SIGNUP, body);
+  },
+  login(body) {
+    return axiosApi.post(url.LOGIN, body);
   },
 };

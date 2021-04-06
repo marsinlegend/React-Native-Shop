@@ -7,7 +7,7 @@ export const fetchProducts = createAsyncThunk(
     try {
       const res = await Api.fetchProducts();
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         return {
           products: res.data.products.map((p) => ({
             ...p,

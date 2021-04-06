@@ -28,7 +28,7 @@ export const fetchOrders = createAsyncThunk(
     try {
       const res = await Api.fetchOrders();
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         return { ...res.data };
       } else {
         return rejectWithValue(res.data);
