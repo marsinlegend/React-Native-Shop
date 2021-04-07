@@ -23,7 +23,7 @@ export const signup = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }, { rejectWithValue }) => {
+  async ({ email, password }, { getState, rejectWithValue }) => {
     try {
       const res = await Api.login({ email, password });
 
