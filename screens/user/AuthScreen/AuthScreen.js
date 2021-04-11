@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -20,18 +20,24 @@ import Colors from '../../../constants/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   authSelector,
+  checkAuth,
   login,
   signup,
 } from '../../../store/auth/authSlice';
 import CentredView from '../../../components/UI/CentredView/CentredView';
 
-const AuthScreen = ({ route, navigation }) => {
+const AuthScreen = ({ navigation }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
 
   const dispatch = useDispatch();
-  const { isFetching, isError, errMessage } = useSelector(
-    authSelector,
-  );
+  const { isFetching } = useSelector(authSelector);
+
+  useEffect(() => {
+    const tryCheckAuth = async () => {
+      await dispatch(checkAuth());
+    };
+    tryCheckAuth();
+  }, [dispatch]);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -103,51 +109,48 @@ const AuthScreen = ({ route, navigation }) => {
         colors={[Colors.defaultPrimary, Colors.accent]}
         style={s.gradient}
       >
-        <Card style={s.authContainer}>
-          <ScrollView>
-            {!isLoginMode && (
+        {isFetching ? (
+          <CentredView>
+            <ActivityIndicator size="large" color="#fff" />
+          </CentredView>
+        ) : (
+          <Card style={s.authContainer}>
+            <ScrollView>
+              {!isLoginMode && (
+                <Input
+                  id="name"
+                  label="Full Name"
+                  errorText="Please enter a valid Full name (at least 5 characters)."
+                  validators={[VALIDATOR_MINLENGTH(5)]}
+                  onInput={inputHandler}
+                  keyboardType="default"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                />
+              )}
+
               <Input
-                id="name"
-                label="Full Name"
-                errorText="Please enter a valid Full name (at least 5 characters)."
+                id="email"
+                label="E-Mail"
+                errorText="Please enter a valid email address."
+                validators={[VALIDATOR_EMAIL()]}
+                onInput={inputHandler}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="next"
+              />
+              <Input
+                id="password"
+                label="Password"
+                errorText="Please enter a valid password (at least 5 characters)."
                 validators={[VALIDATOR_MINLENGTH(5)]}
                 onInput={inputHandler}
                 keyboardType="default"
-                autoCapitalize="sentences"
-                returnKeyType="next"
+                secureTextEntry
+                autoCapitalize="none"
+                returnKeyType="done"
               />
-            )}
 
-            <Input
-              id="email"
-              label="E-Mail"
-              errorText="Please enter a valid email address."
-              validators={[VALIDATOR_EMAIL()]}
-              onInput={inputHandler}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              returnKeyType="next"
-            />
-            <Input
-              id="password"
-              label="Password"
-              errorText="Please enter a valid password (at least 5 characters)."
-              validators={[VALIDATOR_MINLENGTH(5)]}
-              onInput={inputHandler}
-              keyboardType="default"
-              secureTextEntry
-              autoCapitalize="none"
-              returnKeyType="done"
-            />
-
-            {isFetching ? (
-              <CentredView>
-                <ActivityIndicator
-                  size="large"
-                  color={Colors.defaultPrimary}
-                />
-              </CentredView>
-            ) : (
               <View style={s.buttonBox}>
                 <Button
                   title={isLoginMode ? 'Login' : 'Sign Up'}
@@ -156,19 +159,19 @@ const AuthScreen = ({ route, navigation }) => {
                   onPress={authHandler}
                 />
               </View>
-            )}
 
-            <View style={s.switchBox}>
-              <Button
-                title={`Switch to ${
-                  isLoginMode ? ' Register' : 'Login'
-                }`}
-                color={Colors.accent}
-                onPress={switchModeHandler}
-              />
-            </View>
-          </ScrollView>
-        </Card>
+              <View style={s.switchBox}>
+                <Button
+                  title={`Switch to ${
+                    isLoginMode ? ' Register' : 'Login'
+                  }`}
+                  color={Colors.accent}
+                  onPress={switchModeHandler}
+                />
+              </View>
+            </ScrollView>
+          </Card>
+        )}
       </LinearGradient>
     </KeyboardAvoidingView>
   );

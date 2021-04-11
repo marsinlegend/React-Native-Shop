@@ -1,5 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Api } from '../../api/Api';
+import { Storage } from '../../api/Storage';
+
+export const checkAuth = createAsyncThunk(
+  'auth/checkAuth',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { token } = await Storage.getData('user');
+
+      return { token };
+    } catch (e) {
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
+    }
+  },
+);
 
 export const signup = createAsyncThunk(
   'auth/signup',
@@ -7,9 +22,9 @@ export const signup = createAsyncThunk(
     try {
       const res = await Api.signup({ name, email, password });
 
-      console.log(res);
-
       if (res.status === 201) {
+        await Storage.setData('user', res.data.user);
+
         return { ...res.data };
       } else {
         return rejectWithValue(res.data);
@@ -23,13 +38,13 @@ export const signup = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }, { getState, rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
       const res = await Api.login({ email, password });
 
-      console.log(res);
-
       if (res.status === 200) {
+        await Storage.setData('user', res.data.user);
+
         return { ...res.data };
       } else {
         return rejectWithValue(res.data);
@@ -44,16 +59,15 @@ export const login = createAsyncThunk(
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    token: [],
+    user: null,
+    isLoggedIn: null,
     isFetching: false,
-    isSuccess: false,
     isError: false,
     errMessage: '',
   },
   reducers: {
     clearState: (state) => {
       state.isError = false;
-      state.isSuccess = false;
       state.isFetching = false;
       state.errMessage = '';
 
@@ -61,10 +75,23 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: {
+    [checkAuth.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isLoggedIn = !!payload.token;
+    },
+    [checkAuth.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [checkAuth.rejected]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errMessage = payload;
+    },
     [signup.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
+      state.isLoggedIn = true;
 
-      state.token = payload.token;
+      state.user = payload.user;
     },
     [signup.pending]: (state) => {
       state.isFetching = true;
@@ -76,8 +103,9 @@ export const authSlice = createSlice({
     },
     [login.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
+      state.isLoggedIn = true;
 
-      state.token = payload.token;
+      state.user = payload.user;
     },
     [login.pending]: (state) => {
       state.isFetching = true;

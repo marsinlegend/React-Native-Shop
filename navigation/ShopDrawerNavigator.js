@@ -9,11 +9,12 @@ import Colors from '../constants/Colors';
 import AdminStackNavigator from './AdminStackNavigator';
 import ProductsStackNavigator from './ProductsStackNavigator';
 import AuthScreen from '../screens/user/AuthScreen/AuthScreen';
-
-export const isSignedIn = false;
+import { useSelector } from 'react-redux';
+import { authSelector } from '../store/auth/authSlice';
 
 const ShopDrawerNavigator = (props) => {
   const Drawer = createDrawerNavigator();
+  const { isLoggedIn } = useSelector(authSelector);
 
   return (
     <NavigationContainer>
@@ -23,7 +24,7 @@ const ShopDrawerNavigator = (props) => {
           activeTintColor: Colors.defaultPrimary,
         }}
       >
-        {!isSignedIn ? (
+        {!isLoggedIn ? (
           <Drawer.Screen name="Auth" component={AuthScreen} />
         ) : (
           <>
