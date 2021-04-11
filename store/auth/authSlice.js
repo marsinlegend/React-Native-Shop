@@ -16,6 +16,18 @@ export const checkAuth = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await Storage.clearData('user');
+    } catch (e) {
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
+    }
+  },
+);
+
 export const signup = createAsyncThunk(
   'auth/signup',
   async ({ name, email, password }, { rejectWithValue }) => {
@@ -82,10 +94,20 @@ export const authSlice = createSlice({
     [checkAuth.pending]: (state) => {
       state.isFetching = true;
     },
-    [checkAuth.rejected]: (state, { payload }) => {
+    [checkAuth.rejected]: (state) => {
       state.isFetching = false;
       state.isError = true;
-      state.errMessage = payload;
+    },
+    [logout.fulfilled]: (state) => {
+      state.isFetching = false;
+      state.isLoggedIn = false;
+    },
+    [logout.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [logout.rejected]: (state) => {
+      state.isFetching = false;
+      state.isError = true;
     },
     [signup.fulfilled]: (state, { payload }) => {
       state.isFetching = false;

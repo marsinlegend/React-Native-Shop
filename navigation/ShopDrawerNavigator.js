@@ -11,6 +11,7 @@ import ProductsStackNavigator from './ProductsStackNavigator';
 import AuthScreen from '../screens/user/AuthScreen/AuthScreen';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../store/auth/authSlice';
+import LogoutButton from '../components/UI/LogoutButton/LogoutButton';
 
 const ShopDrawerNavigator = (props) => {
   const Drawer = createDrawerNavigator();
@@ -23,6 +24,7 @@ const ShopDrawerNavigator = (props) => {
         drawerContentOptions={{
           activeTintColor: Colors.defaultPrimary,
         }}
+        drawerContent={(props) => <LogoutButton {...props} />}
       >
         {!isLoggedIn ? (
           <Drawer.Screen name="Auth" component={AuthScreen} />
