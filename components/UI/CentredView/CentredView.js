@@ -3,10 +3,11 @@ import { View } from 'react-native';
 import s from './styles';
 
 const CentredView = ({ children, left, right }) => {
-  let alignItems = 'center';
-
-  if (left) alignItems = 'flex-start';
-  if (right) alignItems = 'flex-end';
+  const alignItems = left
+    ? 'flex-start'
+    : right
+    ? 'flex-end'
+    : 'center';
 
   return (
     <View style={{ ...s.container, alignItems }}>{children}</View>

@@ -23,6 +23,7 @@ import {
 } from '../../../store/shop/ProductsSlice';
 import CentredView from '../../../components/UI/CentredView/CentredView';
 import Colors from '../../../constants/Colors';
+import ImagePicker from '../../../components/UI/ImagePicker/ImagePicker';
 
 const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
@@ -41,7 +42,7 @@ const EditProductsScreen = ({ route, navigation }) => {
       isValid: false,
     },
 
-    imageUrl: {
+    image: {
       value: '',
       isValid: false,
     },
@@ -51,7 +52,7 @@ const EditProductsScreen = ({ route, navigation }) => {
       isValid: false,
     },
 
-    description: {
+    descr: {
       value: null,
       isValid: false,
     },
@@ -79,24 +80,17 @@ const EditProductsScreen = ({ route, navigation }) => {
       );
       return;
     }
+
+    const formData = new FormData();
+    formData.append('title', formState.inputs.title.value);
+    formData.append('descr', formState.inputs.descr.value);
+    formData.append('image', formState.inputs.image.value);
+
     if (editedProduct) {
-      await dispatch(
-        updateProduct({
-          id: prodId,
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          imageUrl: formState.inputs.imageUrl.value,
-        }),
-      );
+      await dispatch(updateProduct({ id: prodId, formData }));
     } else {
-      await dispatch(
-        createProduct({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          imageUrl: formState.inputs.imageUrl.value,
-          price: +formState.inputs.price.value,
-        }),
-      );
+      formData.append('price', formState.inputs.price.value);
+      await dispatch(createProduct({ formData }));
     }
   }, [dispatch, prodId, formState]);
 
@@ -138,18 +132,17 @@ const EditProductsScreen = ({ route, navigation }) => {
             autoCorrect
             returnKeyType="next"
           />
-          <Input
-            id="imageUrl"
-            label="Image URL"
-            placeholder="Type here image url"
-            errorText="Please enter a valid image url"
-            validators={[VALIDATOR_REQUIRE()]}
+
+          <ImagePicker
+            id="image"
+            initPhoto={
+              editedProduct
+                ? `http://192.168.1.5:5000/${editedProduct.image}`
+                : ''
+            }
             onInput={inputHandler}
-            initValue={editedProduct ? editedProduct.imageUrl : ''}
-            initValid={!!editedProduct}
-            returnKeyType="next"
-            keyboardType="default"
           />
+
           {editedProduct ? null : (
             <Input
               id="price"
@@ -165,13 +158,13 @@ const EditProductsScreen = ({ route, navigation }) => {
             />
           )}
           <Input
-            id="description"
+            id="descr"
             label="Description"
             placeholder="Type here description"
             errorText="Please enter a valid description (at least 10 characters)."
             validators={[VALIDATOR_MINLENGTH(10)]}
             onInput={inputHandler}
-            initValue={editedProduct ? editedProduct.description : ''}
+            initValue={editedProduct ? editedProduct.descr : ''}
             initValid={!!editedProduct}
             autoCorrect
             autoCapitalize="sentences"

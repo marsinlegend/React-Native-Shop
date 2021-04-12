@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   KeyboardAvoidingView,
   Platform,
@@ -21,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   authSelector,
   checkAuth,
+  clearState,
   login,
   signup,
 } from '../../../store/auth/authSlice';
@@ -30,14 +32,26 @@ const AuthScreen = ({ navigation }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
 
   const dispatch = useDispatch();
-  const { isFetching } = useSelector(authSelector);
+  const { isFetching, isError, errMessage } = useSelector(
+    authSelector,
+  );
 
   useEffect(() => {
-    const tryCheckAuth = async () => {
+    (async () => {
       await dispatch(checkAuth());
-    };
-    tryCheckAuth();
+    })();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isError) {
+      Alert.alert('Authentication error!', errMessage, [
+        {
+          text: 'Okay',
+        },
+      ]);
+      clearState();
+    }
+  }, [isError, errMessage]);
 
   const [formState, inputHandler, setFormData] = useForm(
     {

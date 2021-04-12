@@ -101,7 +101,7 @@ const UserProductsScreen = ({ navigation }) => {
       data={userProducts}
       renderItem={({ item }) => (
         <ProductItem
-          image={item.imageUrl}
+          image={item.image}
           title={item.title}
           price={item.price}
           onSelect={() => {

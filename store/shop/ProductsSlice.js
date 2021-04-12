@@ -26,17 +26,9 @@ export const fetchProducts = createAsyncThunk(
 
 export const createProduct = createAsyncThunk(
   'products/createProduct',
-  async (
-    { title, description, imageUrl, price },
-    { rejectWithValue },
-  ) => {
+  async ({ formData }, { rejectWithValue }) => {
     try {
-      const res = await Api.createProduct({
-        title,
-        description,
-        imageUrl,
-        price,
-      });
+      const res = await Api.createProduct(formData);
 
       if (res.status === 201) {
         return { ownerId: 'u1', ...res.data };
@@ -52,14 +44,11 @@ export const createProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   'products/updateProduct',
-  async (
-    { id, title, description, imageUrl },
-    { rejectWithValue },
-  ) => {
+  async ({ id, formData }, { rejectWithValue }) => {
     try {
       const res = await Api.updateProductById({
         id,
-        body: { title, description, imageUrl },
+        body: formData,
       });
 
       if (res.status === 200) {

@@ -2,32 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Api } from '../../api/Api';
 import { Storage } from '../../api/Storage';
 
-export const checkAuth = createAsyncThunk(
-  'auth/checkAuth',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { token } = await Storage.getData('user');
-
-      return { token };
-    } catch (e) {
-      console.log('Error', e.response.data);
-      return rejectWithValue(e.response.data);
-    }
-  },
-);
-
-export const logout = createAsyncThunk(
-  'auth/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      await Storage.clearData('user');
-    } catch (e) {
-      console.log('Error', e.response.data);
-      return rejectWithValue(e.response.data);
-    }
-  },
-);
-
 export const signup = createAsyncThunk(
   'auth/signup',
   async ({ name, email, password }, { rejectWithValue }) => {
@@ -68,6 +42,32 @@ export const login = createAsyncThunk(
   },
 );
 
+export const checkAuth = createAsyncThunk(
+  'auth/checkAuth',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { token } = await Storage.getData('user');
+
+      return { token };
+    } catch (e) {
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
+    }
+  },
+);
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await Storage.clearData('user');
+    } catch (e) {
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
+    }
+  },
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -87,28 +87,6 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: {
-    [checkAuth.fulfilled]: (state, { payload }) => {
-      state.isFetching = false;
-      state.isLoggedIn = !!payload.token;
-    },
-    [checkAuth.pending]: (state) => {
-      state.isFetching = true;
-    },
-    [checkAuth.rejected]: (state) => {
-      state.isFetching = false;
-      state.isError = true;
-    },
-    [logout.fulfilled]: (state) => {
-      state.isFetching = false;
-      state.isLoggedIn = false;
-    },
-    [logout.pending]: (state) => {
-      state.isFetching = true;
-    },
-    [logout.rejected]: (state) => {
-      state.isFetching = false;
-      state.isError = true;
-    },
     [signup.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
       state.isLoggedIn = true;
@@ -136,6 +114,26 @@ export const authSlice = createSlice({
       state.isFetching = false;
       state.isError = true;
       state.errMessage = payload;
+    },
+    [checkAuth.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isLoggedIn = !!payload.token;
+    },
+    [checkAuth.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [checkAuth.rejected]: (state) => {
+      state.isFetching = false;
+    },
+    [logout.fulfilled]: (state) => {
+      state.isFetching = false;
+      state.isLoggedIn = false;
+    },
+    [logout.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [logout.rejected]: (state) => {
+      state.isFetching = false;
     },
   },
 });

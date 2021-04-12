@@ -16,7 +16,10 @@ const ProductDetailsScreen = ({ route }) => {
 
   return (
     <ScrollView>
-      <Image style={s.img} source={{ uri: product.imageUrl }} />
+      <Image
+        style={s.img}
+        source={{ uri: `http://192.168.1.5:5000/${product.image}` }}
+      />
 
       <View style={s.actions}>
         <Button

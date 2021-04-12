@@ -23,7 +23,10 @@ const ProductItem = ({ title, price, image, onSelect, children }) => {
         <TouchableCmp onPress={onSelect} useForeground>
           <View style={s.touchable}>
             <View style={s.imgContainer}>
-              <Image style={s.img} source={{ uri: image }} />
+              <Image
+                style={s.img}
+                source={{ uri: `http://192.168.1.5:5000/${image}` }}
+              />
             </View>
 
             <View style={s.details}>
