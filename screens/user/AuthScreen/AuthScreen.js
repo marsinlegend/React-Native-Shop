@@ -120,7 +120,7 @@ const AuthScreen = ({ navigation }) => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <LinearGradient
-        colors={[Colors.defaultPrimary, Colors.accent]}
+        colors={[Colors.darkPrimary, Colors.accent]}
         style={s.gradient}
       >
         {isFetching ? (
@@ -168,7 +168,7 @@ const AuthScreen = ({ navigation }) => {
               <View style={s.buttonBox}>
                 <Button
                   title={isLoginMode ? 'Login' : 'Sign Up'}
-                  color={Colors.darkPrimary}
+                  color={Colors.defaultPrimary}
                   disabled={!formState.isValid}
                   onPress={authHandler}
                 />

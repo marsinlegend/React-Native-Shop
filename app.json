@@ -1,14 +1,19 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Online Shop",
+    "slug": "online-shop-app",
     "version": "1.0.0",
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "androidStatusBar": {
       "backgroundColor": "#E64A19",
@@ -21,10 +26,16 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "app.web.snaichuk.shop",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "android": {
+      "package": "app.web.snaichuk.shop",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA", "ACCESS_FINE_LOCATION", "WRITE_EXTERNAL_STORAGE"
+      ]
     }
   }
 }
