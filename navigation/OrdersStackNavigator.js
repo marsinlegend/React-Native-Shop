@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import OrdersScreen from '../screens/shop/OrdersScreen/OrdersScreen';
+import { options as ordersOptions } from '../screens/shop/OrdersScreen/options';
 
 const OrdersStackNavigator = (props) => {
   const Stack = createStackNavigator();
@@ -10,11 +11,7 @@ const OrdersStackNavigator = (props) => {
       <Stack.Screen
         name="Orders"
         component={OrdersScreen}
-        options={({ navigation, route }) => {
-          return {
-            title: 'Orders',
-          };
-        }}
+        options={ordersOptions}
       />
     </Stack.Navigator>
   );

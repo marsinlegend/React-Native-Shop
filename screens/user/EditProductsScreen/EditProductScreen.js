@@ -24,6 +24,8 @@ import {
 import CentredView from '../../../components/UI/CentredView/CentredView';
 import Colors from '../../../constants/Colors';
 import ImagePicker from '../../../components/UI/ImagePicker/ImagePicker';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import HeaderButton from '../../../components/UI/HeaderButton/HeaderButton';
 
 const EditProductsScreen = ({ route, navigation }) => {
   const prodId = route.params?.productId;
@@ -95,7 +97,21 @@ const EditProductsScreen = ({ route, navigation }) => {
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
-    navigation.setParams({ submit: submitHandler });
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Save"
+            iconName={
+              Platform.OS === 'android'
+                ? 'md-checkmark'
+                : 'ios-checkmark'
+            }
+            onPress={submitHandler}
+          />
+        </HeaderButtons>
+      ),
+    });
   }, [submitHandler]);
 
   useEffect(() => {

@@ -35,7 +35,8 @@
       "versionCode": 1,
       "permissions": [
         "CAMERA", "ACCESS_FINE_LOCATION", "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "useNextNotificationsApi": true
     }
   }
 }

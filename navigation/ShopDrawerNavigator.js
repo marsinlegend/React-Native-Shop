@@ -1,17 +1,22 @@
 import React from 'react';
-// import { Platform } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import OrdersStackNavigator from './OrdersStackNavigator';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
 import Colors from '../constants/Colors';
-import AdminStackNavigator from './AdminStackNavigator';
-import ProductsStackNavigator from './ProductsStackNavigator';
-import AuthScreen from '../screens/user/AuthScreen/AuthScreen';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../store/auth/authSlice';
 import LogoutButton from '../components/UI/LogoutButton/LogoutButton';
+//screens
+import AuthScreen from '../screens/user/AuthScreen/AuthScreen';
+//stack navigators
+import ProductsStackNavigator from './ProductsStackNavigator';
+import OrdersStackNavigator from './OrdersStackNavigator';
+import AdminStackNavigator from './AdminStackNavigator';
 
 const ShopDrawerNavigator = (props) => {
   const Drawer = createDrawerNavigator();
@@ -24,7 +29,12 @@ const ShopDrawerNavigator = (props) => {
         drawerContentOptions={{
           activeTintColor: Colors.defaultPrimary,
         }}
-        drawerContent={(props) => <LogoutButton {...props} />}
+        drawerContent={(props) => (
+          <DrawerContentScrollView>
+            <DrawerItemList {...props} />
+            {isLoggedIn && <LogoutButton {...props} />}
+          </DrawerContentScrollView>
+        )}
       >
         {!isLoggedIn ? (
           <Drawer.Screen name="Auth" component={AuthScreen} />

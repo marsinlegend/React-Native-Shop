@@ -1,13 +1,14 @@
 import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import NavOpt from './NavOptions';
+//screens
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen/ProductsOverviewScreen';
 import ProductDetailsScreen from '../screens/shop/ProductDetailsScreen/ProductDetailsScreen';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Platform } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import HeaderButton from '../components/UI/HeaderButton/HeaderButton';
-import { DrawerActions } from '@react-navigation/native';
-import NavOpt from './NavOptions';
 import CartScreen from '../screens/shop/CartScreen/CartScreen';
+//screens options
+import { options as productsOverviewOptions } from '../screens/shop/ProductsOverviewScreen/options';
+import { options as productDetailsOptions } from '../screens/shop/ProductDetailsScreen/options';
+import { options as cartOptions } from '../screens/shop/CartScreen/options';
 
 const ProductsStackNavigator = (props) => {
   const Stack = createStackNavigator();
@@ -20,57 +21,19 @@ const ProductsStackNavigator = (props) => {
       <Stack.Screen
         name="ProductsOverview"
         component={ProductsOverviewScreen}
-        options={({ navigation, route }) => {
-          return {
-            title: 'All Products',
-            headerLeft: () => (
-              <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                  title="Menu"
-                  iconName={
-                    Platform.OS === 'android' ? 'md-menu' : 'ios-menu'
-                  }
-                  onPress={() => {
-                    navigation.dispatch(DrawerActions.toggleDrawer());
-                  }}
-                />
-              </HeaderButtons>
-            ),
-            headerRight: () => (
-              <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                  title="Cart"
-                  iconName={
-                    Platform.OS === 'android' ? 'md-cart' : 'ios-cart'
-                  }
-                  onPress={() => {
-                    navigation.navigate('Cart');
-                  }}
-                />
-              </HeaderButtons>
-            ),
-          };
-        }}
+        options={productsOverviewOptions}
       />
 
       <Stack.Screen
         name="ProductDetails"
         component={ProductDetailsScreen}
-        options={({ navigation, route }) => {
-          return {
-            title: route.params.productTitle,
-          };
-        }}
+        options={productDetailsOptions}
       />
 
       <Stack.Screen
         name="Cart"
         component={CartScreen}
-        options={({ navigation, route }) => {
-          return {
-            title: 'Cart',
-          };
-        }}
+        options={cartOptions}
       />
     </Stack.Navigator>
   );
