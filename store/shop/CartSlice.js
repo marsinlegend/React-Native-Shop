@@ -11,9 +11,11 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
+      console.log(action.payload);
       const addedProd = action.payload;
       const productPrice = addedProd.price;
       const productTitle = addedProd.title;
+      const pushToken = addedProd.ownerPushToken;
       const totalAmount = state.totalAmount + productPrice;
 
       if (state.items[addedProd.id]) {
@@ -21,6 +23,7 @@ export const cartSlice = createSlice({
           quantity: state.items[addedProd.id].quantity + 1,
           productPrice,
           productTitle,
+          pushToken,
           sum: state.items[addedProd.id].sum + productPrice,
         };
 
@@ -37,6 +40,7 @@ export const cartSlice = createSlice({
           quantity: 1,
           productPrice,
           productTitle,
+          pushToken,
           sum: productPrice,
         };
         return {

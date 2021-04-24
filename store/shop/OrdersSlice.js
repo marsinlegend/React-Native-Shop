@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Api } from '../../api/Api';
+import { sendPushNotification } from '../../helpers/pushNotifications';
 
 export const createOrder = createAsyncThunk(
   'orders/createOrder',
@@ -11,6 +12,14 @@ export const createOrder = createAsyncThunk(
       });
 
       if (res.status === 201) {
+        for (const item of orderItems) {
+          await sendPushNotification(
+            item.productPushToken,
+            'Order was placed!',
+            item.productTitle,
+          );
+        }
+
         return { ...res.data };
       } else {
         return rejectWithValue(res.data);

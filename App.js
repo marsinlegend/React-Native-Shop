@@ -9,6 +9,13 @@ import {
 } from '@expo-google-fonts/balsamiq-sans';
 import AppLoading from 'expo-app-loading';
 import ShopDrawerNavigator from './navigation/ShopDrawerNavigator';
+import { setNotificationHandler } from 'expo-notifications';
+
+setNotificationHandler({
+  handleNotification: async () => {
+    return { shouldShowAlert: true };
+  },
+});
 
 export default function App(props) {
   const [fontsLoaded] = useFonts({

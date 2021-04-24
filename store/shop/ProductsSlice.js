@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Api } from '../../api/Api';
+import { registerPushNotifications } from '../../helpers/pushNotifications';
 
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
@@ -27,6 +28,9 @@ export const fetchProducts = createAsyncThunk(
 export const createProduct = createAsyncThunk(
   'products/createProduct',
   async ({ formData }, { rejectWithValue }) => {
+    const pushToken = await registerPushNotifications();
+    formData.append('ownerPushToken', pushToken);
+
     try {
       const res = await Api.createProduct(formData);
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Image, Text, View } from 'react-native';
 import * as ImgPicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+import { askAsync, CAMERA, MEDIA_LIBRARY } from 'expo-permissions';
 import s from './styles';
 import Colors from '../../../constants/Colors';
 
@@ -10,10 +10,7 @@ const ImagePicker = ({ id, initPhoto, onInput }) => {
   const [previewUrl, setPreviewUrl] = useState(initPhoto);
 
   const verifyPermissions = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.CAMERA,
-      Permissions.MEDIA_LIBRARY,
-    );
+    const { status } = await askAsync(CAMERA, MEDIA_LIBRARY);
     if (status !== 'granted') {
       alert(
         'Sorry, we need camera roll permissions to make this work!',
