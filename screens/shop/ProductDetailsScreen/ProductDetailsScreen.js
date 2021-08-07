@@ -13,12 +13,13 @@ const ProductDetailsScreen = ({ route }) => {
     ),
   );
   const dispatch = useDispatch();
+  console.log(product);
 
   return (
     <ScrollView>
       <Image
         style={s.img}
-        source={{ uri: `http://192.168.1.4:5000/${product.image}` }}
+        source={{ uri: `http://192.168.42.214:5000/${product.image}` }}
       />
 
       <View style={s.actions}>
@@ -32,7 +33,7 @@ const ProductDetailsScreen = ({ route }) => {
       </View>
 
       <Text style={s.price}>${product.price.toFixed(2)}</Text>
-      <Text style={s.description}>{product.description}</Text>
+      <Text style={s.description}>{product.descr}</Text>
     </ScrollView>
   );
 };

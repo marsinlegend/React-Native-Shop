@@ -25,7 +25,7 @@ const ProductItem = ({ title, price, image, onSelect, children }) => {
             <View style={s.imgContainer}>
               <Image
                 style={s.img}
-                source={{ uri: `http://192.168.1.4:5000/${image}` }}
+                source={{ uri: `http://192.168.42.214:5000/${image}` }}
               />
             </View>
 

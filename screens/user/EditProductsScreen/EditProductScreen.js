@@ -153,7 +153,7 @@ const EditProductsScreen = ({ route, navigation }) => {
             id="image"
             initPhoto={
               editedProduct
-                ? `http://192.168.1.4:5000/${editedProduct.image}`
+                ? `http://192.168.42.214:5000/${editedProduct.image}`
                 : ''
             }
             onInput={inputHandler}

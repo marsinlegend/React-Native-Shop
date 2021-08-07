@@ -88,6 +88,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
           image={item.image}
           title={item.title}
           price={item.price}
+          description={item.descr}
           onSelect={() => {
             onSelectHandler(item.id, item.title);
           }}
