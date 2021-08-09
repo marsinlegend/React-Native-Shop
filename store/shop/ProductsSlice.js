@@ -32,7 +32,6 @@ export const createProduct = createAsyncThunk(
     formData.append('ownerPushToken', pushToken);
 
     try {
-      console.log(formData);
       const res = await Api.createProduct(formData);
 
       if (res.status === 201) {

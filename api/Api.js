@@ -2,7 +2,7 @@ import axios from 'axios';
 import { apiUrl as url } from './urls';
 
 const axiosApi = axios.create({
-  baseURL: 'http://192.168.42.214:5000',
+  baseURL: 'https://rn-places-api.herokuapp.com',
 });
 
 export const Api = {

@@ -13,13 +13,12 @@ const ProductDetailsScreen = ({ route }) => {
     ),
   );
   const dispatch = useDispatch();
-  console.log(product);
 
   return (
     <ScrollView>
       <Image
         style={s.img}
-        source={{ uri: `http://192.168.42.214:5000/${product.image}` }}
+        source={{ uri: `https://rn-places-api.herokuapp.com/${product.image}` }}
       />
 
       <View style={s.actions}>

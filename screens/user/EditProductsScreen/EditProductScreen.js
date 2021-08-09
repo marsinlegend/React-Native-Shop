@@ -153,7 +153,7 @@ const EditProductsScreen = ({ route, navigation }) => {
             id="image"
             initPhoto={
               editedProduct
-                ? `http://192.168.42.214:5000/${editedProduct.image}`
+                ? `https://rn-places-api.herokuapp.com/${editedProduct.image}`
                 : ''
             }
             onInput={inputHandler}
